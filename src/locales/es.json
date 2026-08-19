@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "title": "App Place — ap3c.app",
+    "description": "App Place reúne varias aplicaciones dentro de una sola app para Android. Proyecto en desarrollo."
+  },
+  "hero": {
+    "eyebrow": "ap3c.app",
+    "title": "App Place",
+    "tagline": "Varias aplicaciones dentro de una sola.",
+    "status": "En desarrollo · Android"
+  },
+  "language": {
+    "label": "Idioma",
+    "es": "Español",
+    "en": "Inglés"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados."
+  }
+}
