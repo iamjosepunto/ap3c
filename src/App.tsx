@@ -85,10 +85,12 @@ export default function App() {
           </p>
         </main>
 
-        <footer className="flex items-center gap-1.5 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:text-xs">
-          <span>© {new Date().getFullYear()}</span>
-          <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
-          <span className="hidden sm:inline">· {t('footer.rights')}</span>
+        <footer className="flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:text-xs">
+          <span className="flex items-center gap-1.5">
+            © {new Date().getFullYear()}
+            <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
+          </span>
+          <span className="w-full whitespace-nowrap sm:w-auto">· {t('footer.rights')}</span>
         </footer>
       </div>
     </div>
