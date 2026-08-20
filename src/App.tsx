@@ -229,7 +229,10 @@ export default function App() {
             className={[
               'cursor-pointer rounded-sm px-1.5 py-1 text-left font-mono text-[0.66rem] uppercase leading-tight tracking-[0.08em]',
               'transition-colors sm:px-3 sm:py-2 sm:text-[1.05rem] sm:tracking-[0.14em]',
-              i === videoActivo ? 'bg-surface/70 text-crema' : 'text-muted hover:text-crema'
+              'border-l-[3px]',
+              i === videoActivo
+                ? 'border-accent bg-surface/70 text-crema'
+                : 'border-transparent text-muted hover:border-line hover:text-crema'
             ].join(' ')}
           >
             {t(`videos.v${i}`)}
