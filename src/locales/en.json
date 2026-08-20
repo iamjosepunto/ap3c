@@ -8,7 +8,8 @@
     "title": "App Place",
     "tagline": "Get the best apps by installing a single Android app",
     "status": "In development · Android",
-    "loading": "Loading animation"
+    "loading": "Loading animation",
+    "dismiss": "Tap to dismiss"
   },
   "language": {
     "label": "Language",

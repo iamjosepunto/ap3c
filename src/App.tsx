@@ -26,6 +26,7 @@ export default function App() {
   const language = i18n.resolvedLanguage ?? 'en'
   const video = useRef<HTMLVideoElement>(null)
   const [animacionLista, setAnimacionLista] = useState(false)
+  const [cartelVisible, setCartelVisible] = useState(true)
   const [enPausa, setEnPausa] = useState(false)
   const [velocidad, setVelocidad] = useState(VELOCIDADES.length - 1)
   const [tiempo, setTiempo] = useState(0)
@@ -109,7 +110,7 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
-      <div className="absolute inset-x-0 top-0 mx-auto aspect-[720/1606] h-dvh">
+      <div className="absolute inset-x-0 top-[70px] mx-auto aspect-[720/1606] h-[calc(100dvh-134px)] sm:top-0 sm:h-dvh">
         <video
           ref={video}
           src="/Prueba.mp4"
@@ -196,12 +197,21 @@ export default function App() {
           height={256}
           className="w-16 shrink-0 sm:w-32"
         />
-        <span aria-hidden="true" className="parpadeo flex h-16 shrink-0 items-center self-start text-3xl text-accent sm:h-auto sm:self-center sm:text-6xl">
-          ←
-        </span>
-        <p className="parpadeo max-w-[9.5rem] rounded-md border border-line bg-surface/60 px-2.5 py-1.5 text-lg leading-snug text-accent sm:w-[680px] sm:max-w-none sm:self-center sm:px-4 sm:py-1.5 sm:text-4xl">
-          {t('hero.tagline')}
-        </p>
+        {cartelVisible && (
+          <>
+            <span aria-hidden="true" className="parpadeo flex h-16 shrink-0 items-center self-start text-3xl text-accent sm:h-auto sm:self-center sm:text-6xl">
+              ←
+            </span>
+            <button
+              type="button"
+              onClick={() => setCartelVisible(false)}
+              title={t('hero.dismiss')}
+              className="parpadeo max-w-[9.5rem] cursor-pointer rounded-md border border-line bg-surface/60 px-2.5 py-1.5 text-left text-lg leading-snug text-accent sm:w-[680px] sm:max-w-none sm:self-center sm:px-4 sm:py-1.5 sm:text-4xl"
+            >
+              {t('hero.tagline')}
+            </button>
+          </>
+        )}
       </div>
 
       <p className="absolute bottom-1 right-1 z-10 rounded-full border border-line bg-surface/60 px-3 py-1.5 text-center font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:px-4 sm:py-2 sm:text-xs">
