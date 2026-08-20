@@ -322,10 +322,10 @@ export default function App() {
               height={256}
               style={intro === 'saliendo' ? { transform: viaje } : undefined}
               className={[
-                'w-[11.5rem] origin-top-left [image-rendering:pixelated] sm:w-[18.4rem]',
+                'w-[11.5rem] [image-rendering:pixelated] sm:w-[18.4rem]',
                 intro === 'dentro'
-                  ? 'intro-logo'
-                  : 'transition-transform duration-[900ms] ease-[cubic-bezier(0.65,0,0.35,1)]'
+                  ? 'intro-logo origin-center'
+                  : 'origin-top-left transition-transform duration-[900ms] ease-[cubic-bezier(0.65,0,0.35,1)]'
               ].join(' ')}
             />
             <p
