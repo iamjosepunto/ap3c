@@ -29,6 +29,8 @@ export default function App() {
   const [animacionLista, setAnimacionLista] = useState(false)
   const [intro, setIntro] = useState<'dentro' | 'saliendo' | 'fuera'>('dentro')
   const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
+  const [panelVisible, setPanelVisible] = useState(true)
+  const ocultador = useRef<number | null>(null)
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
@@ -98,8 +100,33 @@ export default function App() {
     setVelocidad((i) => (i + 1) % VELOCIDADES.length)
   }
 
+  // El panel se retira solo si nadie lo toca
+  const posponerOcultado = () => {
+    if (ocultador.current) window.clearTimeout(ocultador.current)
+    ocultador.current = window.setTimeout(() => setPanelVisible(false), 4000)
+  }
+
+  const alternarPanel = () => {
+    setPanelVisible((visible) => {
+      if (!visible) posponerOcultado()
+      return !visible
+    })
+  }
+
+  // La cuenta atras empieza cuando la presentacion ha terminado, no antes
+  useEffect(() => {
+    if (intro !== 'fuera') return
+    setPanelVisible(true)
+    posponerOcultado()
+    return () => {
+      if (ocultador.current) window.clearTimeout(ocultador.current)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [intro])
+
   // El panel se arrastra solo en vertical y sin salirse del area del video
   const empezarArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
+    posponerOcultado()
     if ((e.target as HTMLElement).closest('button, input')) return
     const zona = zonaVideo.current
     const p = panel.current
@@ -121,6 +148,7 @@ export default function App() {
   }
 
   const soltarArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
+    posponerOcultado()
     arrastre.current = null
     panel.current?.releasePointerCapture(e.pointerId)
   }
@@ -179,6 +207,7 @@ export default function App() {
           playsInline
           preload="auto"
           onLoadedData={() => setAnimacionLista(true)}
+          onClick={alternarPanel}
           className={[
             'h-full w-full',
             'transition-opacity duration-500',
@@ -196,7 +225,8 @@ export default function App() {
             style={posicionPanel === null ? undefined : { top: posicionPanel, bottom: 'auto' }}
             className={[
               'absolute inset-x-0 z-20 select-none border-y border-line/60 bg-surface/50 px-2 py-1.5 backdrop-blur-sm',
-              'cursor-ns-resize touch-none',
+              'cursor-ns-resize touch-none transition-opacity duration-300',
+              panelVisible ? 'opacity-100' : 'pointer-events-none opacity-0',
               posicionPanel === null ? 'bottom-36 sm:bottom-44' : ''
             ].join(' ')}
           >
@@ -243,12 +273,20 @@ export default function App() {
                 {VELOCIDADES[velocidad]}x
               </button>
 
-              <span
+              <svg
                 aria-hidden="true"
-                className="ml-auto inline-block scale-y-[1.6] select-none font-mono text-[1.6rem] leading-none text-crema/60 sm:text-3xl"
+                viewBox="0 0 12 46"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.1}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="ml-auto h-[46px] w-3.5 shrink-0 text-crema/60"
               >
-                {'\u2195'}
-              </span>
+                <path d="M6 3v40" />
+                <path d="M2.5 7 6 3l3.5 4" />
+                <path d="M2.5 39 6 43l3.5-4" />
+              </svg>
             </div>
 
             <div className="mt-1.5 flex items-center gap-2">
@@ -362,14 +400,14 @@ export default function App() {
           ))}
       </p>
 
-      <div className="relative flex min-h-dvh flex-col px-6 py-7 sm:px-10 sm:py-9">
-        <header className="flex items-start justify-end gap-4">
+      <div className="pointer-events-none relative flex min-h-dvh flex-col px-6 py-7 sm:px-10 sm:py-9">
+        <header className="pointer-events-auto flex items-start justify-end gap-4">
           <LanguageSwitcher />
         </header>
 
-        <main className="flex-1" />
+        <main className="pointer-events-none flex-1" />
 
-        <footer className="-mb-6 -ml-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:mb-0 sm:ml-0 sm:text-xs">
+        <footer className="pointer-events-auto -mb-6 -ml-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:mb-0 sm:ml-0 sm:text-xs">
           <span className="flex items-center gap-1.5">
             © {new Date().getFullYear()}
             <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
