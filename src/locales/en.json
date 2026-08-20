@@ -26,6 +26,7 @@
     "play": "Play",
     "pause": "Pause",
     "faster": "Faster",
-    "timeline": "Timeline"
+    "timeline": "Timeline",
+    "drag": "Drag to move the panel"
   }
 }

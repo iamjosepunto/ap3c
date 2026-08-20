@@ -26,6 +26,7 @@
     "play": "Reproducir",
     "pause": "Pausar",
     "faster": "Más rápido",
-    "timeline": "Línea de tiempo"
+    "timeline": "Línea de tiempo",
+    "drag": "Arrastra para mover el panel"
   }
 }

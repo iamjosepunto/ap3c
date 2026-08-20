@@ -192,6 +192,7 @@ export default function App() {
             onPointerMove={moverArrastre}
             onPointerUp={soltarArrastre}
             onPointerCancel={soltarArrastre}
+            title={t('controls.drag')}
             style={posicionPanel === null ? undefined : { top: posicionPanel, bottom: 'auto' }}
             className={[
               'absolute inset-x-0 z-20 select-none border-y border-line/60 bg-surface/50 px-2 py-1.5 backdrop-blur-sm',
@@ -241,6 +242,13 @@ export default function App() {
               >
                 {VELOCIDADES[velocidad]}x
               </button>
+
+              <span
+                aria-hidden="true"
+                className="ml-auto select-none font-mono text-[1.6rem] leading-none text-crema/60 sm:text-3xl"
+              >
+                {'\u2195'}
+              </span>
             </div>
 
             <div className="mt-1.5 flex items-center gap-2">
@@ -293,7 +301,7 @@ export default function App() {
       <p
         ref={sloganCabecera}
         className={[
-          'absolute left-[70px] top-[19px] z-10 whitespace-pre-line text-center font-mono text-[0.5rem] uppercase leading-relaxed tracking-[0.2em] text-crema',
+          'absolute left-[70px] top-[11px] z-10 whitespace-pre-line text-center font-mono text-[0.825rem] uppercase leading-relaxed tracking-[0.2em] text-crema',
           'sm:left-0 sm:top-[134px] sm:text-[0.75rem]',
           intro === 'fuera' ? 'opacity-100' : 'opacity-0'
         ].join(' ')}
