@@ -32,6 +32,7 @@ export default function App() {
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
+  const bloqueSuperior = useRef<HTMLDivElement>(null)
   const [enPausa, setEnPausa] = useState(false)
   const [velocidad, setVelocidad] = useState(VELOCIDADES.length - 1)
   const [tiempo, setTiempo] = useState(0)
@@ -88,8 +89,13 @@ export default function App() {
     const zona = zonaVideo.current
     const p = panel.current
     if (!a || !zona || !p) return
-    const tope = zona.clientHeight - p.offsetHeight
-    setPosicionPanel(Math.min(tope, Math.max(0, a.desdePos + (e.clientY - a.desdeY))))
+    // El panel no puede subir por encima del logo ni del cartel
+    const bloque = bloqueSuperior.current
+    const suelo = bloque
+      ? Math.max(0, bloque.getBoundingClientRect().bottom - zona.getBoundingClientRect().top)
+      : 0
+    const tope = Math.max(suelo, zona.clientHeight - p.offsetHeight)
+    setPosicionPanel(Math.min(tope, Math.max(suelo, a.desdePos + (e.clientY - a.desdeY))))
   }
 
   const soltarArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -233,7 +239,7 @@ export default function App() {
         </div>
       )}
 
-      <div className="absolute left-0 top-0 z-10 flex items-start gap-0 sm:gap-1">
+      <div ref={bloqueSuperior} className="absolute left-0 top-0 z-10 flex items-start gap-0 sm:gap-1">
         <img
           src="/logo-app-place.webp"
           alt="App Place Catalog"
