@@ -46,6 +46,9 @@ export default function App() {
   const [panelVisible, setPanelVisible] = useState(false)
   const [videoActivo, setVideoActivo] = useState(0)
   const [pantallaCompleta, setPantallaCompleta] = useState(false)
+  const menu = useRef<HTMLElement>(null)
+  const [borde, setBorde] = useState({ izq: 0, der: 0, ancho: 0 })
+  const [esEscritorio, setEsEscritorio] = useState(false)
   const ocultador = useRef<number | null>(null)
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
@@ -180,6 +183,39 @@ export default function App() {
     setPantallaCompleta((v) => !v)
   }
 
+  // En escritorio todo se agrupa en un escenario del ancho de menu mas video
+  useEffect(() => {
+    const consulta = window.matchMedia('(min-width: 640px)')
+    const mirar = () => setEsEscritorio(consulta.matches)
+    mirar()
+    consulta.addEventListener('change', mirar)
+    return () => consulta.removeEventListener('change', mirar)
+  }, [])
+
+  // Los bordes del grupo salen del video, que no se mueve de su sitio
+  useEffect(() => {
+    const n = menu.current
+    const z = zonaVideo.current
+    if (!n || !z) return
+    const medir = () => {
+      const r = z.getBoundingClientRect()
+      setBorde({
+        izq: Math.round(r.left - n.offsetWidth),
+        der: Math.round(r.right),
+        ancho: n.offsetWidth
+      })
+    }
+    const observador = new ResizeObserver(medir)
+    observador.observe(z)
+    observador.observe(n)
+    medir()
+    window.addEventListener('resize', medir)
+    return () => {
+      observador.disconnect()
+      window.removeEventListener('resize', medir)
+    }
+  }, [])
+
   useEffect(() => {
     const alCambiar = () => setPantallaCompleta(Boolean(document.fullscreenElement))
     document.addEventListener('fullscreenchange', alCambiar)
@@ -239,10 +275,13 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
+
       <nav
+        ref={menu}
         aria-label="Videos"
+        style={esEscritorio && !pantallaCompleta ? { left: borde.izq } : undefined}
         className={[
-          'absolute bottom-[64px] left-0 top-[70px] z-10 flex w-[70px] flex-col sm:bottom-[60px] sm:top-[190px] sm:w-[220px] sm:px-4',
+          'absolute bottom-[64px] left-0 top-[70px] z-10 flex w-[70px] flex-col sm:bottom-[60px] sm:top-[190px] sm:w-fit sm:pl-3 sm:pr-1',
           pantallaCompleta ? 'hidden' : ''
         ].join(' ')}
       >
@@ -442,6 +481,7 @@ export default function App() {
 
       <img
         ref={logoCabecera}
+        style={esEscritorio && !pantallaCompleta ? { left: borde.izq } : undefined}
         src="/logo-app-place.webp"
         alt="App Place Catalog"
         width={256}
@@ -454,6 +494,7 @@ export default function App() {
 
       <p
         ref={sloganCabecera}
+        style={esEscritorio && !pantallaCompleta ? { left: borde.izq } : undefined}
         className={[
           'absolute left-[70px] top-[11px] z-10 whitespace-pre-line text-center font-mono text-[0.825rem] uppercase leading-relaxed tracking-[0.2em] text-crema',
           'sm:left-0 sm:top-[134px] sm:text-[0.75rem]',
@@ -506,7 +547,25 @@ export default function App() {
         </>
       )}
 
-      <p className="absolute bottom-1 right-1 z-10 rounded-full border border-line bg-surface/60 px-3 py-1.5 text-center font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:px-4 sm:py-2 sm:text-xs">
+      <header style={esEscritorio && !pantallaCompleta ? { left: borde.der } : undefined} className="absolute right-1 top-3 z-20 sm:right-auto sm:top-4">
+        <LanguageSwitcher />
+      </header>
+
+      <footer
+        style={
+          esEscritorio && !pantallaCompleta ? { left: borde.izq, maxWidth: borde.ancho } : undefined
+        } className="absolute bottom-1 left-2 z-20 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:text-xs">
+        <span className="flex items-center gap-1.5">
+          © {new Date().getFullYear()}
+          <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
+        </span>
+        <span className="w-full whitespace-nowrap text-[0.6rem] sm:w-auto sm:text-xs">
+          <span className="hidden sm:inline">· </span>
+          {t('footer.rights')}
+        </span>
+      </footer>
+
+      <p style={esEscritorio && !pantallaCompleta ? { left: borde.der } : undefined} className="absolute bottom-1 right-1 z-10 rounded-full sm:right-auto border border-line bg-surface/60 px-3 py-1.5 text-center font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-2 sm:right-0 sm:px-4 sm:py-2 sm:text-xs">
         {t('hero.status')
           .split('·')
           .map((linea) => (
@@ -515,25 +574,6 @@ export default function App() {
             </span>
           ))}
       </p>
-
-      <div className="pointer-events-none relative flex min-h-dvh flex-col px-6 py-7 sm:px-10 sm:py-9">
-        <header className="pointer-events-auto flex items-start justify-end gap-4">
-          <LanguageSwitcher />
-        </header>
-
-        <main className="pointer-events-none flex-1" />
-
-        <footer className="pointer-events-auto -mb-6 -ml-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:mb-0 sm:ml-0 sm:text-xs">
-          <span className="flex items-center gap-1.5">
-            © {new Date().getFullYear()}
-            <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
-          </span>
-          <span className="w-full whitespace-nowrap text-[0.6rem] sm:w-auto sm:text-xs">
-            <span className="hidden sm:inline">· </span>
-            {t('footer.rights')}
-          </span>
-        </footer>
-      </div>
     </div>
   )
 }
