@@ -218,7 +218,7 @@ export default function App() {
 
       <nav
         aria-label="Videos"
-        className="absolute bottom-[64px] left-0 top-[70px] z-10 flex w-[70px] flex-col justify-between sm:bottom-[60px] sm:top-[190px] sm:w-[220px] sm:px-4"
+        className="absolute bottom-[64px] left-0 top-[70px] z-10 flex w-[70px] flex-col sm:bottom-[60px] sm:top-[190px] sm:w-[220px] sm:px-4"
       >
         {VIDEOS.map((_, i) => (
           <button
@@ -227,7 +227,7 @@ export default function App() {
             onClick={() => elegirVideo(i)}
             aria-current={i === videoActivo ? 'true' : undefined}
             className={[
-              'cursor-pointer rounded-sm px-1.5 py-1 text-left font-mono text-[0.66rem] uppercase leading-tight tracking-[0.08em]',
+              'flex flex-1 cursor-pointer items-center rounded-sm px-1.5 py-1 text-left font-mono text-[0.66rem] uppercase leading-tight tracking-[0.08em]',
               'transition-colors sm:px-3 sm:py-2 sm:text-[1.05rem] sm:tracking-[0.14em]',
               'border-l-[3px]',
               i === videoActivo
