@@ -27,7 +27,7 @@ export default function LanguageSwitcher() {
             className={[
               'flex items-center gap-2 rounded-sm px-0.5 py-1.5',
               'sm:gap-2 sm:px-2 sm:py-[9px]',
-              'font-mono text-[20px] uppercase leading-none tracking-[0.18em] sm:text-[29px]',
+              'font-mono text-[16px] uppercase leading-none tracking-[0.18em] sm:text-[29px]',
               'cursor-pointer transition-colors duration-200',
               active ? 'text-accent' : 'text-muted hover:text-ink'
             ].join(' ')}
@@ -37,7 +37,7 @@ export default function LanguageSwitcher() {
               alt=""
               width={20}
               height={14}
-              className="h-3.5 w-5 rounded-[2px] object-cover sm:h-[21px] sm:w-[30px] sm:rounded-[3px]"
+              className="h-[11px] w-4 rounded-[2px] object-cover sm:h-[21px] sm:w-[30px] sm:rounded-[3px]"
             />
             {code}
           </button>
