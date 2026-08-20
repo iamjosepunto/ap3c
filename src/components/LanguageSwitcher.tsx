@@ -13,7 +13,7 @@ export default function LanguageSwitcher() {
   const current = i18n.resolvedLanguage as SupportedLanguage | undefined
 
   return (
-    <nav aria-label={t('language.label')} className="flex items-center gap-1.5">
+    <nav aria-label={t('language.label')} className="flex items-center gap-1 sm:gap-1.5">
       {SUPPORTED_LANGUAGES.map((code) => {
         const active = current === code
         return (
@@ -25,8 +25,9 @@ export default function LanguageSwitcher() {
             aria-label={t(`language.${code}`)}
             onClick={() => void i18n.changeLanguage(code)}
             className={[
-              'flex items-center gap-3 rounded-sm px-[15px] py-[9px]',
-              'font-mono text-lg uppercase tracking-[0.18em]',
+              'flex items-center gap-2 rounded-sm px-2.5 py-1.5',
+              'sm:gap-3 sm:px-[15px] sm:py-[9px]',
+              'font-mono text-xs uppercase tracking-[0.18em] sm:text-lg',
               'cursor-pointer transition-colors duration-200',
               active ? 'text-accent' : 'text-muted hover:text-ink'
             ].join(' ')}
@@ -34,9 +35,9 @@ export default function LanguageSwitcher() {
             <img
               src={BANDERAS[code]}
               alt=""
-              width={30}
-              height={21}
-              className="h-[21px] w-[30px] rounded-[3px] object-cover"
+              width={20}
+              height={14}
+              className="h-3.5 w-5 rounded-[2px] object-cover sm:h-[21px] sm:w-[30px] sm:rounded-[3px]"
             />
             {code}
           </button>
