@@ -169,7 +169,7 @@ export default function App() {
             className={[
               'absolute inset-x-0 z-20 select-none border-y border-line/60 bg-surface/50 px-2 py-1.5 backdrop-blur-sm',
               'cursor-ns-resize touch-none',
-              posicionPanel === null ? 'bottom-20 sm:bottom-9' : ''
+              posicionPanel === null ? 'bottom-28 sm:bottom-36' : ''
             ].join(' ')}
           >
             <div className="relative flex items-center justify-start gap-3">
