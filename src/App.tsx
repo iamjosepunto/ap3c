@@ -236,7 +236,9 @@ export default function App() {
                   {
                     etiqueta: enPausa ? t('controls.play') : t('controls.pause'),
                     icono: enPausa ? (
-                      '\u25B6'
+                      <svg viewBox="0 0 10 12" fill="currentColor" className="block h-[0.85em] w-[0.72em]">
+                        <path d="M0 0 10 6 0 12Z" />
+                      </svg>
                     ) : (
                       <span className="flex items-center gap-[0.1em]">
                         <span className="h-[0.85em] w-[0.32em] bg-current" />
