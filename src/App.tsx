@@ -35,7 +35,7 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
-      <div className="absolute left-0 top-0 z-10 flex items-start gap-1">
+      <div className="absolute left-0 top-0 z-10 flex items-start gap-0 sm:gap-1">
         <img
           src="/logo-app-place.webp"
           alt="App Place Catalog"
