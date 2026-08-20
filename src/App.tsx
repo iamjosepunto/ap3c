@@ -172,7 +172,7 @@ export default function App() {
               posicionPanel === null ? 'bottom-20 sm:bottom-9' : ''
             ].join(' ')}
           >
-            <div className="relative flex items-center justify-center gap-3">
+            <div className="relative flex items-center justify-start gap-3">
               {[
                 { etiqueta: t('controls.stop'), simbolo: '\u25A0', accion: detener },
                 {
