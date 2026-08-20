@@ -19,12 +19,10 @@
     "rights": "Todos los derechos reservados."
   },
   "controls": {
-    "slower": "Más lento",
-    "back": "Retroceder",
     "stop": "Detener",
     "play": "Reproducir",
     "pause": "Pausar",
-    "forward": "Avanzar",
-    "faster": "Más rápido"
+    "faster": "Más rápido",
+    "timeline": "Línea de tiempo"
   }
 }

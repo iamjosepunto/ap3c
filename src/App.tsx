@@ -3,8 +3,13 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
 
-const VELOCIDADES = [0.5, 0.75, 1, 1.5, 2, 3, 4]
-const SALTO = 10
+const VELOCIDADES = [1, 1.5, 2, 3, 4]
+
+function reloj(segundos: number) {
+  const m = Math.floor(segundos / 60)
+  const s = Math.floor(segundos % 60)
+  return `${m}:${String(s).padStart(2, '0')}`
+}
 
 const OG_LOCALES: Record<string, string> = {
   es: 'es_ES',
@@ -22,27 +27,44 @@ export default function App() {
   const video = useRef<HTMLVideoElement>(null)
   const [animacionLista, setAnimacionLista] = useState(false)
   const [enPausa, setEnPausa] = useState(false)
-  const [velocidad, setVelocidad] = useState(2)
+  const [velocidad, setVelocidad] = useState(0)
+  const [tiempo, setTiempo] = useState(0)
+  const [duracion, setDuracion] = useState(0)
 
   // Si el video ya estaba en cache, onLoadedData no llega a dispararse
   useEffect(() => {
     if ((video.current?.readyState ?? 0) >= 2) setAnimacionLista(true)
   }, [])
 
-  const cambiarVelocidad = (paso: number) => {
+  // Mantiene sincronizados el reloj y la barra con la reproduccion
+  useEffect(() => {
+    const v = video.current
+    if (!v) return
+    const alAvanzar = () => setTiempo(v.currentTime)
+    const alTenerDatos = () => setDuracion(Number.isFinite(v.duration) ? v.duration : 0)
+    v.addEventListener('timeupdate', alAvanzar)
+    v.addEventListener('loadedmetadata', alTenerDatos)
+    alTenerDatos()
+    return () => {
+      v.removeEventListener('timeupdate', alAvanzar)
+      v.removeEventListener('loadedmetadata', alTenerDatos)
+    }
+  }, [])
+
+  // Un solo boton recorre las velocidades y vuelve al principio
+  const siguienteVelocidad = () => {
     setVelocidad((i) => {
-      const nuevo = Math.min(VELOCIDADES.length - 1, Math.max(0, i + paso))
+      const nuevo = (i + 1) % VELOCIDADES.length
       if (video.current) video.current.playbackRate = VELOCIDADES[nuevo]
       return nuevo
     })
   }
 
-  const saltar = (segundos: number) => {
+  const irA = (segundos: number) => {
     const v = video.current
     if (!v) return
-    // Si duration aun no es un numero valido, no se limita por arriba
-    const tope = Number.isFinite(v.duration) ? v.duration : Number.POSITIVE_INFINITY
-    v.currentTime = Math.min(tope, Math.max(0, v.currentTime + segundos))
+    v.currentTime = segundos
+    setTiempo(segundos)
   }
 
   const alternarPausa = () => {
@@ -83,21 +105,68 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
-      <video
-        ref={video}
-        src="/Prueba.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        onLoadedData={() => setAnimacionLista(true)}
-        className={[
-          'absolute left-1/2 top-0 h-dvh w-auto max-w-none -translate-x-1/2',
-          'transition-opacity duration-500',
-          animacionLista ? 'opacity-100' : 'opacity-0'
-        ].join(' ')}
-      />
+      <div className="absolute inset-x-0 top-0 mx-auto aspect-[720/1606] h-dvh">
+        <video
+          ref={video}
+          src="/Prueba.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onLoadedData={() => setAnimacionLista(true)}
+          className={[
+            'h-full w-full',
+            'transition-opacity duration-500',
+            animacionLista ? 'opacity-100' : 'opacity-0'
+          ].join(' ')}
+        />
+        {animacionLista && (
+          <div className="absolute inset-x-0 bottom-20 z-20 border-y border-line/60 bg-surface/50 px-2 py-1.5 backdrop-blur-sm sm:bottom-9">
+            <div className="flex items-center justify-between">
+              {[
+                { etiqueta: t('controls.stop'), simbolo: '\u25A0', accion: detener },
+                {
+                  etiqueta: enPausa ? t('controls.play') : t('controls.pause'),
+                  simbolo: enPausa ? '\u25B6' : '\u2759\u2759',
+                  accion: alternarPausa
+                },
+                { etiqueta: t('controls.faster'), simbolo: '>>>', accion: siguienteVelocidad }
+              ].map((b) => (
+                <button
+                  key={b.etiqueta}
+                  type="button"
+                  onClick={b.accion}
+                  aria-label={b.etiqueta}
+                  title={b.etiqueta}
+                  className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[0.7rem] leading-none text-muted transition-colors hover:bg-line/40 hover:text-ink sm:text-xs"
+                >
+                  {b.simbolo}
+                </button>
+              ))}
+              <span className="px-1 font-mono text-[0.7rem] leading-none text-accent sm:text-xs">
+                {VELOCIDADES[velocidad]}x
+              </span>
+            </div>
+
+            <div className="mt-1.5 flex items-center gap-2">
+              <input
+                type="range"
+                min={0}
+                max={duracion || 0}
+                step={0.1}
+                value={Math.min(tiempo, duracion || 0)}
+                onChange={(e) => irA(Number(e.target.value))}
+                aria-label={t('controls.timeline')}
+                className="h-1 w-full cursor-pointer accent-accent"
+              />
+              <span className="shrink-0 font-mono text-[0.65rem] leading-none tabular-nums text-muted sm:text-[0.7rem]">
+                {reloj(tiempo)} / {reloj(duracion)}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
 
       {!animacionLista && (
         <div
@@ -140,37 +209,6 @@ export default function App() {
             </span>
           ))}
       </p>
-
-      {animacionLista && (
-        <div className="absolute bottom-20 left-1/2 z-20 flex -translate-x-1/2 items-center gap-0.5 rounded-full border border-line/60 bg-surface/40 px-1.5 py-1 backdrop-blur-sm sm:bottom-9">
-          {[
-            { etiqueta: t('controls.slower'), simbolo: '<<<', accion: () => cambiarVelocidad(-1) },
-            { etiqueta: t('controls.back'), simbolo: '<<', accion: () => saltar(-SALTO) },
-            { etiqueta: t('controls.stop'), simbolo: '\u25A0', accion: detener },
-            {
-              etiqueta: enPausa ? t('controls.play') : t('controls.pause'),
-              simbolo: enPausa ? '\u25B6' : '\u2759\u2759',
-              accion: alternarPausa
-            },
-            { etiqueta: t('controls.forward'), simbolo: '>>', accion: () => saltar(SALTO) },
-            { etiqueta: t('controls.faster'), simbolo: '>>>', accion: () => cambiarVelocidad(1) }
-          ].map((b) => (
-            <button
-              key={b.etiqueta}
-              type="button"
-              onClick={b.accion}
-              aria-label={b.etiqueta}
-              title={b.etiqueta}
-              className="cursor-pointer rounded-full px-2 py-1 font-mono text-[0.7rem] leading-none text-muted transition-colors hover:bg-line/40 hover:text-ink sm:text-xs"
-            >
-              {b.simbolo}
-            </button>
-          ))}
-          <span className="px-2 font-mono text-[0.7rem] leading-none text-accent sm:text-xs">
-            {VELOCIDADES[velocidad]}x
-          </span>
-        </div>
-      )}
 
       <div className="relative flex min-h-dvh flex-col px-6 py-7 sm:px-10 sm:py-9">
         <header className="flex items-start justify-end gap-4">
