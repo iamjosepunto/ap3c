@@ -66,28 +66,7 @@ export default function App() {
           <LanguageSwitcher />
         </header>
 
-        <main className="flex flex-1 flex-col items-center justify-center py-16 text-center">
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 40 40"
-            className="reveal size-9 sm:size-10"
-            style={{ animationDelay: '0ms' }}
-          >
-            <g className="fill-line">
-              <rect x="0" y="0" width="17" height="17" rx="5" />
-              <rect x="23" y="0" width="17" height="17" rx="5" />
-              <rect x="0" y="23" width="17" height="17" rx="5" />
-            </g>
-            <rect x="23" y="23" width="17" height="17" rx="5" className="fill-accent" />
-          </svg>
-
-          <h1
-            className="reveal mt-8 font-display text-[clamp(2.5rem,9.5vw,6.25rem)] font-semibold leading-[0.95] tracking-[-0.035em]"
-            style={{ animationDelay: '90ms' }}
-          >
-            {t('hero.title')}
-          </h1>
-        </main>
+        <main className="flex-1" />
 
         <footer className="-mb-6 -ml-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:mb-0 sm:ml-0 sm:text-xs">
           <span className="flex items-center gap-1.5">
