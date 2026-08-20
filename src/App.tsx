@@ -1,5 +1,6 @@
 ﻿// UBICACION: src/App.tsx
 import { useEffect, useRef, useState } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
 
@@ -27,6 +28,10 @@ export default function App() {
   const video = useRef<HTMLVideoElement>(null)
   const [animacionLista, setAnimacionLista] = useState(false)
   const [cartelVisible, setCartelVisible] = useState(true)
+  const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
+  const zonaVideo = useRef<HTMLDivElement>(null)
+  const panel = useRef<HTMLDivElement>(null)
+  const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
   const [enPausa, setEnPausa] = useState(false)
   const [velocidad, setVelocidad] = useState(VELOCIDADES.length - 1)
   const [tiempo, setTiempo] = useState(0)
@@ -63,6 +68,33 @@ export default function App() {
   // Un solo boton recorre las velocidades y vuelve al principio
   const siguienteVelocidad = () => {
     setVelocidad((i) => (i + 1) % VELOCIDADES.length)
+  }
+
+  // El panel se arrastra solo en vertical y sin salirse del area del video
+  const empezarArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('button, input')) return
+    const zona = zonaVideo.current
+    const p = panel.current
+    if (!zona || !p) return
+    arrastre.current = {
+      desdeY: e.clientY,
+      desdePos: p.getBoundingClientRect().top - zona.getBoundingClientRect().top
+    }
+    p.setPointerCapture(e.pointerId)
+  }
+
+  const moverArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const a = arrastre.current
+    const zona = zonaVideo.current
+    const p = panel.current
+    if (!a || !zona || !p) return
+    const tope = zona.clientHeight - p.offsetHeight
+    setPosicionPanel(Math.min(tope, Math.max(0, a.desdePos + (e.clientY - a.desdeY))))
+  }
+
+  const soltarArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
+    arrastre.current = null
+    panel.current?.releasePointerCapture(e.pointerId)
   }
 
   const irA = (segundos: number) => {
@@ -110,7 +142,7 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
-      <div className="absolute inset-x-0 top-[70px] mx-auto aspect-[720/1606] h-[calc(100dvh-134px)] sm:top-0 sm:h-dvh">
+      <div ref={zonaVideo} className="absolute inset-x-0 top-[70px] mx-auto aspect-[720/1606] h-[calc(100dvh-134px)] sm:top-0 sm:h-dvh">
         <video
           ref={video}
           src="/Prueba.mp4"
@@ -127,7 +159,19 @@ export default function App() {
           ].join(' ')}
         />
         {animacionLista && (
-          <div className="absolute inset-x-0 bottom-20 z-20 border-y border-line/60 bg-surface/50 px-2 py-1.5 backdrop-blur-sm sm:bottom-9">
+          <div
+            ref={panel}
+            onPointerDown={empezarArrastre}
+            onPointerMove={moverArrastre}
+            onPointerUp={soltarArrastre}
+            onPointerCancel={soltarArrastre}
+            style={posicionPanel === null ? undefined : { top: posicionPanel, bottom: 'auto' }}
+            className={[
+              'absolute inset-x-0 z-20 select-none border-y border-line/60 bg-surface/50 px-2 py-1.5 backdrop-blur-sm',
+              'cursor-ns-resize touch-none',
+              posicionPanel === null ? 'bottom-20 sm:bottom-9' : ''
+            ].join(' ')}
+          >
             <div className="relative flex items-center justify-center gap-3">
               {[
                 { etiqueta: t('controls.stop'), simbolo: '\u25A0', accion: detener },
@@ -163,7 +207,7 @@ export default function App() {
                 value={Math.min(tiempo, duracion || 0)}
                 onChange={(e) => irA(Number(e.target.value))}
                 aria-label={t('controls.timeline')}
-                className="h-1 w-full cursor-pointer accent-accent"
+                className="h-1 w-full cursor-pointer touch-auto accent-accent"
               />
               <span className="shrink-0 font-mono text-[1.3rem] leading-none tabular-nums text-muted sm:text-[1.4rem]">
                 {reloj(tiempo)} / {reloj(duracion)}
