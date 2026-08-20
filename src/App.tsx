@@ -46,7 +46,7 @@ export default function App() {
         <span aria-hidden="true" className="parpadeo shrink-0 self-start text-3xl text-accent sm:self-center sm:text-6xl">
           ←
         </span>
-        <p className="parpadeo max-w-[9.5rem] rounded-md border border-line bg-surface/60 px-2.5 py-1.5 text-lg leading-snug text-accent sm:w-[680px] sm:max-w-none sm:px-4 sm:py-1.5 sm:text-4xl">
+        <p className="parpadeo max-w-[9.5rem] rounded-md border border-line bg-surface/60 px-2.5 py-1.5 text-lg leading-snug text-accent sm:w-[680px] sm:max-w-none sm:self-center sm:px-4 sm:py-1.5 sm:text-4xl">
           {t('hero.tagline')}
         </p>
       </div>
