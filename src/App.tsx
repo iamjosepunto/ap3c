@@ -46,6 +46,7 @@ export default function App() {
   const [panelVisible, setPanelVisible] = useState(false)
   const [videoActivo, setVideoActivo] = useState(0)
   const [pantallaCompleta, setPantallaCompleta] = useState(false)
+  const [cajaUtil, setCajaUtil] = useState<{ izq: number; ancho: number } | null>(null)
   const menu = useRef<HTMLElement>(null)
   const [borde, setBorde] = useState({ izq: 0, der: 0, ancho: 0 })
   const [esEscritorio, setEsEscritorio] = useState(false)
@@ -216,6 +217,24 @@ export default function App() {
     }
   }, [])
 
+  // Al cambiar el tamano de la zona: recolocar el panel dentro y ajustarlo al video visible
+  useEffect(() => {
+    const z = zonaVideo.current
+    if (!z) return
+    const reajustar = () => {
+      const ancho = z.clientWidth
+      const alto = z.clientHeight
+      const util = Math.min(ancho, (alto * 720) / 1606)
+      setCajaUtil({ izq: Math.round((ancho - util) / 2), ancho: Math.round(util) })
+      const alturaPanel = panel.current?.offsetHeight ?? 0
+      setPosicionPanel((pos) => (pos === null ? null : Math.min(Math.max(0, alto - alturaPanel), pos)))
+    }
+    const observador = new ResizeObserver(reajustar)
+    observador.observe(z)
+    reajustar()
+    return () => observador.disconnect()
+  }, [animacionLista])
+
   useEffect(() => {
     const alCambiar = () => setPantallaCompleta(Boolean(document.fullscreenElement))
     document.addEventListener('fullscreenchange', alCambiar)
@@ -341,7 +360,12 @@ export default function App() {
             onPointerUp={soltarArrastre}
             onPointerCancel={soltarArrastre}
             title={t('controls.drag')}
-            style={posicionPanel === null ? undefined : { top: posicionPanel, bottom: 'auto' }}
+            style={{
+              ...(posicionPanel === null ? {} : { top: posicionPanel, bottom: 'auto' }),
+              ...(pantallaCompleta && cajaUtil
+                ? { left: cajaUtil.izq, right: 'auto', width: cajaUtil.ancho }
+                : {})
+            }}
             className={[
               'absolute inset-x-0 z-20 select-none border-y border-line/60 bg-surface/50 px-2 py-1.5 backdrop-blur-sm',
               'cursor-ns-resize touch-none transition-opacity duration-300',
