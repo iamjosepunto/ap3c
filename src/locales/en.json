@@ -17,5 +17,14 @@
   },
   "footer": {
     "rights": "All rights reserved."
+  },
+  "controls": {
+    "slower": "Slower",
+    "back": "Rewind",
+    "stop": "Stop",
+    "play": "Play",
+    "pause": "Pause",
+    "forward": "Forward",
+    "faster": "Faster"
   }
 }
