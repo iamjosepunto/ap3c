@@ -1,6 +1,6 @@
 ﻿// UBICACION: src/App.tsx
 import { useEffect, useRef, useState } from 'react'
-import type { PointerEvent as ReactPointerEvent } from 'react'
+import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
 
@@ -34,7 +34,7 @@ export default function App() {
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
   const botonAceptar = useRef<HTMLButtonElement>(null)
   const [enPausa, setEnPausa] = useState(true)
-  const [velocidad, setVelocidad] = useState(VELOCIDADES.length - 1)
+  const [velocidad, setVelocidad] = useState(0)
   const [tiempo, setTiempo] = useState(0)
   const [duracion, setDuracion] = useState(0)
 
@@ -45,10 +45,6 @@ export default function App() {
 
   const aceptar = () => {
     setCartelVisible(false)
-    const v = video.current
-    if (!v) return
-    void v.play()
-    setEnPausa(false)
   }
 
   // Si el video ya estaba en cache, onLoadedData no llega a dispararse
@@ -61,8 +57,8 @@ export default function App() {
     const v = video.current
     if (!v) return
     // defaultPlaybackRate es el que el navegador aplica al cargar la fuente
-    v.defaultPlaybackRate = VELOCIDADES[VELOCIDADES.length - 1]
-    v.playbackRate = VELOCIDADES[VELOCIDADES.length - 1]
+    v.defaultPlaybackRate = VELOCIDADES[0]
+    v.playbackRate = VELOCIDADES[0]
     const alAvanzar = () => setTiempo(v.currentTime)
     const alTenerDatos = () => setDuracion(Number.isFinite(v.duration) ? v.duration : 0)
     v.addEventListener('timeupdate', alAvanzar)
@@ -185,16 +181,28 @@ export default function App() {
               posicionPanel === null ? 'bottom-28 sm:bottom-36' : ''
             ].join(' ')}
           >
-            <div className="relative flex items-center justify-start gap-3">
-              {[
-                { etiqueta: t('controls.stop'), simbolo: '\u25A0', accion: detener },
-                {
-                  etiqueta: enPausa ? t('controls.play') : t('controls.pause'),
-                  simbolo: enPausa ? '\u25B6' : '\u2759\u2759',
-                  accion: alternarPausa
-                },
-                { etiqueta: t('controls.faster'), simbolo: '>>>', accion: siguienteVelocidad }
-              ].map((b) => (
+            <div className="flex items-center justify-start gap-3">
+              {(
+                [
+                  {
+                    etiqueta: t('controls.stop'),
+                    icono: <span className="block h-[0.85em] w-[0.85em] bg-current" />,
+                    accion: detener
+                  },
+                  {
+                    etiqueta: enPausa ? t('controls.play') : t('controls.pause'),
+                    icono: enPausa ? (
+                      '\u25B6'
+                    ) : (
+                      <span className="flex items-center gap-[0.1em]">
+                        <span className="h-[0.85em] w-[0.32em] bg-current" />
+                        <span className="h-[0.85em] w-[0.32em] bg-current" />
+                      </span>
+                    ),
+                    accion: alternarPausa
+                  }
+                ] as { etiqueta: string; icono: ReactNode; accion: () => void }[]
+              ).map((b) => (
                 <button
                   key={b.etiqueta}
                   type="button"
@@ -203,12 +211,18 @@ export default function App() {
                   title={b.etiqueta}
                   className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-muted transition-colors hover:bg-line/40 hover:text-ink sm:text-[2.625rem]"
                 >
-                  {b.simbolo}
+                  {b.icono}
                 </button>
               ))}
-              <span className="absolute right-1 font-mono text-[1.4rem] leading-none text-accent sm:text-2xl">
+              <button
+                type="button"
+                onClick={siguienteVelocidad}
+                aria-label={t('controls.faster')}
+                title={t('controls.faster')}
+                className="-ml-2 cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-accent transition-colors hover:bg-line/40 hover:text-ink sm:text-[2.625rem]"
+              >
                 {VELOCIDADES[velocidad]}x
-              </span>
+              </button>
             </div>
 
             <div className="mt-1.5 flex items-center gap-2">
