@@ -6,11 +6,11 @@
   "hero": {
     "eyebrow": "ap3c.app",
     "title": "App Place",
-    "tagline": "Get the best apps by installing a single Android app",
+    "tagline": "The purpose of this website is to explain how you can enjoy our best applications (learning languages, meeting new people, etc.) by installing only our app from the Google Play Store.",
     "status": "In development · Android",
     "loading": "Loading animation",
-    "dismiss": "Tap this card to dismiss it",
-    "welcome": "Welcome to the website of our Android app APP PLACE CATALOG:"
+    "welcome": "Welcome to the website of our Android app APP PLACE CATALOG:",
+    "accept": "GOT IT"
   },
   "language": {
     "label": "Language",

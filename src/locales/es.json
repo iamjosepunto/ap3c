@@ -6,11 +6,11 @@
   "hero": {
     "eyebrow": "ap3c.app",
     "title": "App Place",
-    "tagline": "Dispondrás de las mejores aplicaciones instalándote una única app android",
+    "tagline": "El objetivo de esta web es explicarte cómo puedes disfrutar de nuestras mejores aplicaciones (aprender idiomas, conocer nuevas personas, etc) instalándote únicamente nuestra app desde Google Play Store.",
     "status": "En desarrollo · Android",
     "loading": "Cargando animación",
-    "dismiss": "Toca este cartel para quitarlo",
-    "welcome": "Bienvenido a la web de nuestra app android APP PLACE CATALOG:"
+    "welcome": "Bienvenido a la web de nuestra app android APP PLACE CATALOG:",
+    "accept": "ENTENDIDO"
   },
   "language": {
     "label": "Idioma",
