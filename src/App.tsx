@@ -35,7 +35,7 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
-      <div className="absolute left-0 top-0 z-10 flex items-start gap-2 sm:gap-5">
+      <div className="absolute left-0 top-0 z-10 flex items-start gap-1">
         <img
           src="/logo-app-place.webp"
           alt="App Place Catalog"
@@ -43,7 +43,7 @@ export default function App() {
           height={256}
           className="w-16 shrink-0 sm:w-64"
         />
-        <span aria-hidden="true" className="shrink-0 text-3xl text-accent sm:text-6xl">
+        <span aria-hidden="true" className="parpadeo shrink-0 text-3xl text-accent sm:text-6xl">
           ←
         </span>
         <p className="parpadeo max-w-[9.5rem] rounded-md border border-line bg-surface/60 px-2.5 py-1.5 text-lg leading-snug text-accent sm:max-w-md sm:px-4 sm:py-3 sm:text-4xl">
