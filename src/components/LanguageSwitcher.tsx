@@ -13,7 +13,7 @@ export default function LanguageSwitcher() {
   const current = i18n.resolvedLanguage as SupportedLanguage | undefined
 
   return (
-    <nav aria-label={t('language.label')} className="flex items-center gap-1 sm:gap-1.5">
+    <nav aria-label={t('language.label')} className="-mr-4 -mt-4 flex items-center gap-0 sm:mr-0 sm:mt-0 sm:gap-1.5">
       {SUPPORTED_LANGUAGES.map((code) => {
         const active = current === code
         return (
@@ -25,7 +25,7 @@ export default function LanguageSwitcher() {
             aria-label={t(`language.${code}`)}
             onClick={() => void i18n.changeLanguage(code)}
             className={[
-              'flex items-center gap-2 rounded-sm px-2.5 py-1.5',
+              'flex items-center gap-2 rounded-sm px-1.5 py-1.5',
               'sm:gap-3 sm:px-[15px] sm:py-[9px]',
               'font-mono text-xs uppercase tracking-[0.18em] sm:text-lg',
               'cursor-pointer transition-colors duration-200',
