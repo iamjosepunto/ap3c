@@ -39,8 +39,8 @@ export default function App() {
 
   // La presentacion entra, se mantiene y se funde sola
   useEffect(() => {
-    const aSalir = setTimeout(() => setIntro('saliendo'), 2600)
-    const aFuera = setTimeout(() => setIntro('fuera'), 3300)
+    const aSalir = setTimeout(() => setIntro('saliendo'), 3200)
+    const aFuera = setTimeout(() => setIntro('fuera'), 3900)
     return () => {
       clearTimeout(aSalir)
       clearTimeout(aFuera)
@@ -209,7 +209,7 @@ export default function App() {
                   onClick={b.accion}
                   aria-label={b.etiqueta}
                   title={b.etiqueta}
-                  className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-muted transition-colors hover:bg-line/40 hover:text-ink sm:text-[2.625rem]"
+                  className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-accent transition-colors hover:bg-line/40 hover:text-ink sm:text-[2.625rem]"
                 >
                   {b.icono}
                 </button>
@@ -282,9 +282,9 @@ export default function App() {
             alt=""
             width={256}
             height={256}
-            className="intro-logo w-40 [image-rendering:pixelated] sm:w-64"
+            className="intro-logo w-[11.5rem] [image-rendering:pixelated] sm:w-[18.4rem]"
           />
-          <p className="intro-slogan text-balance text-center font-mono text-base uppercase tracking-[0.2em] text-accent sm:text-2xl">
+          <p className="intro-slogan whitespace-pre-line text-center font-mono text-base uppercase leading-relaxed tracking-[0.2em] text-accent sm:text-2xl">
             {t('hero.slogan')}
           </p>
         </div>
