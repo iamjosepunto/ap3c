@@ -27,25 +27,25 @@ export default function App() {
   const language = i18n.resolvedLanguage ?? 'en'
   const video = useRef<HTMLVideoElement>(null)
   const [animacionLista, setAnimacionLista] = useState(false)
-  const [cartelVisible, setCartelVisible] = useState(true)
+  const [intro, setIntro] = useState<'dentro' | 'saliendo' | 'fuera'>('dentro')
   const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
-  const botonAceptar = useRef<HTMLButtonElement>(null)
   const [enPausa, setEnPausa] = useState(true)
   const [velocidad, setVelocidad] = useState(0)
   const [tiempo, setTiempo] = useState(0)
   const [duracion, setDuracion] = useState(0)
 
-  // El dialogo bloquea la web, asi que el foco debe entrar en el
+  // La presentacion entra, se mantiene y se funde sola
   useEffect(() => {
-    if (cartelVisible) botonAceptar.current?.focus()
-  }, [cartelVisible])
-
-  const aceptar = () => {
-    setCartelVisible(false)
-  }
+    const aSalir = setTimeout(() => setIntro('saliendo'), 2600)
+    const aFuera = setTimeout(() => setIntro('fuera'), 3300)
+    return () => {
+      clearTimeout(aSalir)
+      clearTimeout(aFuera)
+    }
+  }, [])
 
   // Si el video ya estaba en cache, onLoadedData no llega a dispararse
   useEffect(() => {
@@ -268,27 +268,25 @@ export default function App() {
         className="absolute left-0 top-0 z-10 w-16 sm:w-32"
       />
 
-      {cartelVisible && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-base/85 px-4 backdrop-blur-sm">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="bienvenida"
-            className="w-full max-w-[23rem] rounded-md border border-line bg-surface px-4 py-3 text-left text-lg leading-snug text-accent sm:max-w-[780px] sm:px-6 sm:py-5 sm:text-4xl"
-          >
-            <span id="bienvenida" className="parpadeo mb-2 block text-base font-semibold sm:mb-3 sm:text-3xl">
-              {t('hero.welcome')}
-            </span>
-            <span className="parpadeo block">{t('hero.tagline')}</span>
-            <button
-              ref={botonAceptar}
-              type="button"
-              onClick={aceptar}
-              className="mt-4 w-full cursor-pointer rounded-md border border-accent bg-accent px-4 py-2 font-mono text-sm font-semibold uppercase tracking-[0.16em] text-deep transition-colors hover:border-ink hover:bg-ink sm:mt-6 sm:py-3 sm:text-lg"
-            >
-              {t('hero.accept')}
-            </button>
-          </div>
+      {intro !== 'fuera' && (
+        <div
+          aria-hidden="true"
+          className={[
+            'fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-fondo px-6',
+            'transition-opacity duration-700',
+            intro === 'saliendo' ? 'opacity-0' : 'opacity-100'
+          ].join(' ')}
+        >
+          <img
+            src="/logo-app-place.webp"
+            alt=""
+            width={256}
+            height={256}
+            className="intro-logo w-40 [image-rendering:pixelated] sm:w-64"
+          />
+          <p className="intro-slogan text-balance text-center font-mono text-base uppercase tracking-[0.2em] text-accent sm:text-2xl">
+            {t('hero.slogan')}
+          </p>
         </div>
       )}
 
