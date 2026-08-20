@@ -51,7 +51,7 @@ export default function App() {
         </p>
       </div>
 
-      <p className="absolute bottom-6 right-1 z-10 rounded-full border border-line bg-surface/60 px-4 py-2 text-center font-mono text-[0.7rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:text-xs">
+      <p className="absolute bottom-1 right-1 z-10 rounded-full border border-line bg-surface/60 px-4 py-2 text-center font-mono text-[0.7rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:text-xs">
         {t('hero.status')
           .split('·')
           .map((linea) => (
@@ -94,7 +94,7 @@ export default function App() {
             © {new Date().getFullYear()}
             <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
           </span>
-          <span className="w-full whitespace-nowrap sm:w-auto">
+          <span className="w-full whitespace-nowrap text-[0.6rem] sm:w-auto sm:text-xs">
             <span className="hidden sm:inline">· </span>
             {t('footer.rights')}
           </span>
