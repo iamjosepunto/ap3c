@@ -245,7 +245,7 @@ export default function App() {
 
               <span
                 aria-hidden="true"
-                className="ml-auto select-none font-mono text-[1.6rem] leading-none text-crema/60 sm:text-3xl"
+                className="ml-auto inline-block scale-y-[1.6] select-none font-mono text-[1.6rem] leading-none text-crema/60 sm:text-3xl"
               >
                 {'\u2195'}
               </span>
