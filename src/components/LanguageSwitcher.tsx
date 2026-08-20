@@ -3,6 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { SUPPORTED_LANGUAGES } from '../i18n'
 import type { SupportedLanguage } from '../i18n'
 
+const BANDERAS: Record<SupportedLanguage, string> = {
+  es: '/bandera-es.webp',
+  en: '/bandera-en.webp'
+}
+
 export default function LanguageSwitcher() {
   const { t, i18n } = useTranslation()
   const current = i18n.resolvedLanguage as SupportedLanguage | undefined
@@ -20,13 +25,19 @@ export default function LanguageSwitcher() {
             aria-label={t(`language.${code}`)}
             onClick={() => void i18n.changeLanguage(code)}
             className={[
-              'font-mono text-xs uppercase tracking-[0.18em] px-2.5 py-1.5 rounded-sm',
-              'transition-colors duration-200 cursor-pointer',
-              active
-                ? 'text-accent'
-                : 'text-muted hover:text-ink'
+              'flex items-center gap-2 rounded-sm px-2.5 py-1.5',
+              'font-mono text-xs uppercase tracking-[0.18em]',
+              'cursor-pointer transition-colors duration-200',
+              active ? 'text-accent' : 'text-muted hover:text-ink'
             ].join(' ')}
           >
+            <img
+              src={BANDERAS[code]}
+              alt=""
+              width={20}
+              height={14}
+              className="h-3.5 w-5 rounded-[2px] object-cover"
+            />
             {code}
           </button>
         )

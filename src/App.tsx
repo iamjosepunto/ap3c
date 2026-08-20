@@ -35,11 +35,16 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
+      <img
+        src="/logo-app-place.webp"
+        alt="App Place Catalog"
+        width={256}
+        height={256}
+        className="absolute left-0 top-0 z-10 w-16 sm:w-64"
+      />
+
       <div className="relative flex min-h-dvh flex-col px-6 py-7 sm:px-10 sm:py-9">
-        <header className="flex items-center justify-between gap-4">
-          <span className="font-mono text-sm tracking-[0.14em] text-muted">
-            ap<span className="text-accent">3</span>c.app
-          </span>
+        <header className="flex items-start justify-end gap-4">
           <LanguageSwitcher />
         </header>
 
