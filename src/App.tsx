@@ -51,6 +51,16 @@ export default function App() {
         </p>
       </div>
 
+      <p className="absolute bottom-3 right-1 z-10 rounded-full border border-line bg-surface/60 px-4 py-2 text-center font-mono text-[0.7rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:text-xs">
+        {t('hero.status')
+          .split('·')
+          .map((linea) => (
+            <span key={linea} className="block">
+              {`<${linea.trim()}>`}
+            </span>
+          ))}
+      </p>
+
       <div className="relative flex min-h-dvh flex-col px-6 py-7 sm:px-10 sm:py-9">
         <header className="flex items-start justify-end gap-4">
           <LanguageSwitcher />
@@ -77,13 +87,6 @@ export default function App() {
           >
             {t('hero.title')}
           </h1>
-
-          <p
-            className="reveal mt-9 rounded-full border border-line bg-surface/60 px-4 py-2 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted sm:text-xs"
-            style={{ animationDelay: '310ms' }}
-          >
-            {t('hero.status')}
-          </p>
         </main>
 
         <footer className="-mb-4 -ml-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:mb-0 sm:ml-0 sm:text-xs">
