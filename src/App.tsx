@@ -240,7 +240,7 @@ export default function App() {
         ))}
       </nav>
 
-      <div ref={zonaVideo} className="absolute right-0 top-[70px] aspect-[720/1606] h-[calc(100dvh-134px)] sm:top-0 sm:h-dvh">
+      <div ref={zonaVideo} className="absolute left-[70px] right-0 top-[70px] mx-auto aspect-[720/1606] h-[calc(100dvh-134px)] sm:left-[220px] sm:top-0 sm:h-dvh">
         <video
           ref={video}
           src={VIDEOS[videoActivo]}
