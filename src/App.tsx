@@ -270,17 +270,17 @@ export default function App() {
 
               <svg
                 aria-hidden="true"
-                viewBox="0 0 12 46"
+                viewBox="0 0 16 46"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={1.1}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="ml-auto h-[46px] w-3.5 shrink-0 text-crema/60"
+                className="ml-auto h-[46px] w-[18px] shrink-0 text-crema/60"
               >
-                <path d="M6 3v40" />
-                <path d="M2.5 7 6 3l3.5 4" />
-                <path d="M2.5 39 6 43l3.5-4" />
+                <path d="M8 3v40" />
+                <path d="M2.5 8 8 3l5.5 5" />
+                <path d="M2.5 38 8 43l5.5-5" />
               </svg>
             </div>
 
