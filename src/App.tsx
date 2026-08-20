@@ -293,7 +293,7 @@ export default function App() {
       <p
         ref={sloganCabecera}
         className={[
-          'absolute left-[70px] top-[19px] z-10 whitespace-pre-line text-center font-mono text-[0.5rem] uppercase leading-relaxed tracking-[0.2em] text-accent',
+          'absolute left-[70px] top-[19px] z-10 whitespace-pre-line text-center font-mono text-[0.5rem] uppercase leading-relaxed tracking-[0.2em] text-crema',
           'sm:left-0 sm:top-[134px] sm:text-[0.75rem]',
           intro === 'fuera' ? 'opacity-100' : 'opacity-0'
         ].join(' ')}
@@ -332,7 +332,7 @@ export default function App() {
               ref={sloganIntro}
               style={intro === 'saliendo' ? { transform: viajeSlogan } : undefined}
               className={[
-                'origin-top-left whitespace-pre-line text-center font-mono text-base uppercase leading-relaxed tracking-[0.2em] text-accent sm:text-2xl',
+                'origin-top-left whitespace-pre-line text-center font-mono text-base uppercase leading-relaxed tracking-[0.2em] text-crema sm:text-2xl',
                 intro === 'dentro'
                   ? 'intro-slogan'
                   : 'transition-transform duration-[900ms] ease-[cubic-bezier(0.65,0,0.35,1)]'
