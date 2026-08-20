@@ -27,7 +27,9 @@
     "pause": "Pausar",
     "faster": "Más rápido",
     "timeline": "Línea de tiempo",
-    "drag": "Arrastra para mover el panel"
+    "drag": "Arrastra para mover el panel",
+    "fullscreen": "Pantalla completa",
+    "exitFullscreen": "Salir de pantalla completa"
   },
   "videos": {
     "v0": "Primera vez",

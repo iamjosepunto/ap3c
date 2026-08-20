@@ -45,6 +45,7 @@ export default function App() {
   const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
   const [panelVisible, setPanelVisible] = useState(false)
   const [videoActivo, setVideoActivo] = useState(0)
+  const [pantallaCompleta, setPantallaCompleta] = useState(false)
   const ocultador = useRef<number | null>(null)
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
@@ -163,6 +164,28 @@ export default function App() {
     panel.current?.releasePointerCapture(e.pointerId)
   }
 
+  // Si el navegador no admite pantalla completa sobre el contenedor (Safari en iPhone),
+  // se expande por CSS y el resultado visual es el mismo
+  const alternarPantallaCompleta = () => {
+    const zona = zonaVideo.current
+    if (!zona) return
+    if (document.fullscreenElement) {
+      void document.exitFullscreen()
+      return
+    }
+    if (typeof zona.requestFullscreen === 'function') {
+      zona.requestFullscreen().catch(() => setPantallaCompleta((v) => !v))
+      return
+    }
+    setPantallaCompleta((v) => !v)
+  }
+
+  useEffect(() => {
+    const alCambiar = () => setPantallaCompleta(Boolean(document.fullscreenElement))
+    document.addEventListener('fullscreenchange', alCambiar)
+    return () => document.removeEventListener('fullscreenchange', alCambiar)
+  }, [])
+
   const elegirVideo = (indice: number) => {
     setVideoActivo(indice)
     setEnPausa(true)
@@ -218,7 +241,10 @@ export default function App() {
 
       <nav
         aria-label="Videos"
-        className="absolute bottom-[64px] left-0 top-[70px] z-10 flex w-[70px] flex-col sm:bottom-[60px] sm:top-[190px] sm:w-[220px] sm:px-4"
+        className={[
+          'absolute bottom-[64px] left-0 top-[70px] z-10 flex w-[70px] flex-col sm:bottom-[60px] sm:top-[190px] sm:w-[220px] sm:px-4',
+          pantallaCompleta ? 'hidden' : ''
+        ].join(' ')}
       >
         {VIDEOS.map((_, i) => (
           <button
@@ -240,7 +266,14 @@ export default function App() {
         ))}
       </nav>
 
-      <div ref={zonaVideo} className="absolute left-[70px] right-0 top-[70px] mx-auto aspect-[720/1606] h-[calc(100dvh-134px)] sm:left-[220px] sm:top-0 sm:h-dvh">
+      <div
+        ref={zonaVideo}
+        className={
+          pantallaCompleta
+            ? 'fixed inset-0 z-40 bg-fondo'
+            : 'absolute left-[70px] right-0 top-[70px] mx-auto aspect-[720/1606] h-[calc(100dvh-134px)] sm:left-[220px] sm:top-0 sm:h-dvh'
+        }
+      >
         <video
           ref={video}
           src={VIDEOS[videoActivo]}
@@ -249,13 +282,14 @@ export default function App() {
           preload="auto"
           onLoadedData={() => setAnimacionLista(true)}
           onClick={alternarPanel}
+          onDoubleClick={alternarPantallaCompleta}
           onEnded={() => {
             setEnPausa(true)
             if (video.current) video.current.currentTime = 0
             setTiempo(0)
           }}
           className={[
-            'h-full w-full',
+            'h-full w-full object-contain',
             'transition-opacity duration-500',
             animacionLista ? 'opacity-100' : 'opacity-0'
           ].join(' ')}
@@ -321,6 +355,40 @@ export default function App() {
                 {VELOCIDADES[velocidad]}x
               </button>
 
+              <button
+                type="button"
+                onClick={alternarPantallaCompleta}
+                aria-label={pantallaCompleta ? t('controls.exitFullscreen') : t('controls.fullscreen')}
+                title={pantallaCompleta ? t('controls.exitFullscreen') : t('controls.fullscreen')}
+                className="ml-auto cursor-pointer rounded-sm px-2 py-1 text-crema transition-colors hover:bg-line/40"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-7 w-7 sm:h-8 sm:w-8"
+                >
+                  {pantallaCompleta ? (
+                    <>
+                      <path d="M9 3v6H3" />
+                      <path d="M15 3v6h6" />
+                      <path d="M9 21v-6H3" />
+                      <path d="M15 21v-6h6" />
+                    </>
+                  ) : (
+                    <>
+                      <path d="M3 9V3h6" />
+                      <path d="M21 9V3h-6" />
+                      <path d="M3 15v6h6" />
+                      <path d="M21 15v6h-6" />
+                    </>
+                  )}
+                </svg>
+              </button>
+
               <svg
                 aria-hidden="true"
                 viewBox="0 0 16 46"
@@ -329,7 +397,7 @@ export default function App() {
                 strokeWidth={1.1}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="ml-auto h-[46px] w-[18px] shrink-0 text-crema/60"
+                className="h-[46px] w-[18px] shrink-0 text-crema/60"
               >
                 <path d="M8 3v40" />
                 <path d="M2.5 8 8 3l5.5 5" />

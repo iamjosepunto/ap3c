@@ -27,7 +27,9 @@
     "pause": "Pause",
     "faster": "Faster",
     "timeline": "Timeline",
-    "drag": "Drag to move the panel"
+    "drag": "Drag to move the panel",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen"
   },
   "videos": {
     "v0": "First time",
