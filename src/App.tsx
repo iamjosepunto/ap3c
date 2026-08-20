@@ -39,8 +39,8 @@ export default function App() {
 
   // La presentacion entra, se mantiene y se funde sola
   useEffect(() => {
-    const aSalir = setTimeout(() => setIntro('saliendo'), 3200)
-    const aFuera = setTimeout(() => setIntro('fuera'), 3900)
+    const aSalir = setTimeout(() => setIntro('saliendo'), 6600)
+    const aFuera = setTimeout(() => setIntro('fuera'), 7300)
     return () => {
       clearTimeout(aSalir)
       clearTimeout(aFuera)
