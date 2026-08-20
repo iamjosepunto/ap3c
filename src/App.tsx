@@ -202,7 +202,11 @@ export default function App() {
           preload="auto"
           onLoadedData={() => setAnimacionLista(true)}
           onClick={alternarPanel}
-          onEnded={() => setEnPausa(true)}
+          onEnded={() => {
+            setEnPausa(true)
+            if (video.current) video.current.currentTime = 0
+            setTiempo(0)
+          }}
           className={[
             'h-full w-full',
             'transition-opacity duration-500',
