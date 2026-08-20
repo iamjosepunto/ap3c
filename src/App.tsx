@@ -85,7 +85,7 @@ export default function App() {
           </p>
         </main>
 
-        <footer className="flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:text-xs">
+        <footer className="-mb-4 -ml-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:mb-0 sm:ml-0 sm:text-xs">
           <span className="flex items-center gap-1.5">
             © {new Date().getFullYear()}
             <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
