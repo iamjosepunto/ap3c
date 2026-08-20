@@ -9,7 +9,8 @@
     "tagline": "Dispondrás de las mejores aplicaciones instalándote una única app android",
     "status": "En desarrollo · Android",
     "loading": "Cargando animación",
-    "dismiss": "Pulsa para ocultar"
+    "dismiss": "Toca este cartel para quitarlo",
+    "welcome": "Bienvenido a la web de nuestra app android APP PLACE CATALOG:"
   },
   "language": {
     "label": "Idioma",

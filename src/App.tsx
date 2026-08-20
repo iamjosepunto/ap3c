@@ -32,7 +32,6 @@ export default function App() {
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
-  const bloqueSuperior = useRef<HTMLDivElement>(null)
   const [enPausa, setEnPausa] = useState(false)
   const [velocidad, setVelocidad] = useState(VELOCIDADES.length - 1)
   const [tiempo, setTiempo] = useState(0)
@@ -89,13 +88,8 @@ export default function App() {
     const zona = zonaVideo.current
     const p = panel.current
     if (!a || !zona || !p) return
-    // El panel no puede subir por encima del logo ni del cartel
-    const bloque = bloqueSuperior.current
-    const suelo = bloque
-      ? Math.max(0, bloque.getBoundingClientRect().bottom - zona.getBoundingClientRect().top)
-      : 0
-    const tope = Math.max(suelo, zona.clientHeight - p.offsetHeight)
-    setPosicionPanel(Math.min(tope, Math.max(suelo, a.desdePos + (e.clientY - a.desdeY))))
+    const tope = zona.clientHeight - p.offsetHeight
+    setPosicionPanel(Math.min(tope, Math.max(0, a.desdePos + (e.clientY - a.desdeY))))
   }
 
   const soltarArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -239,30 +233,27 @@ export default function App() {
         </div>
       )}
 
-      <div ref={bloqueSuperior} className="absolute left-0 top-0 z-10 flex items-start gap-0 sm:gap-1">
-        <img
-          src="/logo-app-place.webp"
-          alt="App Place Catalog"
-          width={256}
-          height={256}
-          className="w-16 shrink-0 sm:w-32"
-        />
-        {cartelVisible && (
-          <>
-            <span aria-hidden="true" className="parpadeo flex h-16 shrink-0 items-center self-start text-3xl text-accent sm:h-auto sm:self-center sm:text-6xl">
-              ←
-            </span>
-            <button
-              type="button"
-              onClick={() => setCartelVisible(false)}
-              title={t('hero.dismiss')}
-              className="parpadeo max-w-[9.5rem] cursor-pointer rounded-md border border-line bg-surface/60 px-2.5 py-1.5 text-left text-lg leading-snug text-accent sm:w-[680px] sm:max-w-none sm:self-center sm:px-4 sm:py-1.5 sm:text-4xl"
-            >
-              {t('hero.tagline')}
-            </button>
-          </>
-        )}
-      </div>
+      <img
+        src="/logo-app-place.webp"
+        alt="App Place Catalog"
+        width={256}
+        height={256}
+        className="absolute left-0 top-0 z-10 w-16 sm:w-32"
+      />
+
+      {cartelVisible && (
+        <button
+          type="button"
+          onClick={() => setCartelVisible(false)}
+          className="parpadeo absolute left-1/2 top-1/2 z-30 w-[calc(100vw-2rem)] max-w-[22rem] -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-md border border-line bg-surface px-4 py-3 text-left text-lg leading-snug text-accent sm:w-[680px] sm:max-w-none sm:px-6 sm:py-5 sm:text-4xl"
+        >
+          <span className="mb-2 block font-semibold sm:mb-3">{t('hero.welcome')}</span>
+          <span className="block">{t('hero.tagline')}</span>
+          <span className="mt-3 block font-mono text-[0.65rem] uppercase leading-snug tracking-[0.14em] text-muted sm:mt-4 sm:text-sm">
+            {t('hero.dismiss')}
+          </span>
+        </button>
+      )}
 
       <p className="absolute bottom-1 right-1 z-10 rounded-full border border-line bg-surface/60 px-3 py-1.5 text-center font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:px-4 sm:py-2 sm:text-xs">
         {t('hero.status')

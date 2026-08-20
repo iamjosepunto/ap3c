@@ -9,7 +9,8 @@
     "tagline": "Get the best apps by installing a single Android app",
     "status": "In development · Android",
     "loading": "Loading animation",
-    "dismiss": "Tap to dismiss"
+    "dismiss": "Tap this card to dismiss it",
+    "welcome": "Welcome to the website of our Android app APP PLACE CATALOG:"
   },
   "language": {
     "label": "Language",
