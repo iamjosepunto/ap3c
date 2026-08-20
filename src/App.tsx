@@ -32,20 +32,33 @@ export default function App() {
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
+  const logoIntro = useRef<HTMLImageElement>(null)
+  const logoCabecera = useRef<HTMLImageElement>(null)
+  const [viaje, setViaje] = useState<string | undefined>(undefined)
   const [enPausa, setEnPausa] = useState(true)
   const [velocidad, setVelocidad] = useState(0)
   const [tiempo, setTiempo] = useState(0)
   const [duracion, setDuracion] = useState(0)
 
-  // La presentacion entra, se mantiene y se funde sola
+  // La presentacion entra, se mantiene y el logo viaja a la cabecera
   useEffect(() => {
-    const aSalir = setTimeout(() => setIntro('saliendo'), 6600)
-    const aFuera = setTimeout(() => setIntro('fuera'), 7300)
+    const aSalir = setTimeout(() => setIntro('saliendo'), 6000)
+    const aFuera = setTimeout(() => setIntro('fuera'), 7100)
     return () => {
       clearTimeout(aSalir)
       clearTimeout(aFuera)
     }
   }, [])
+
+  // El destino se mide en pantalla, asi encaja con la cabecera en cualquier tamano
+  useEffect(() => {
+    if (intro !== 'saliendo') return
+    const desde = logoIntro.current?.getBoundingClientRect()
+    const hasta = logoCabecera.current?.getBoundingClientRect()
+    if (!desde || !hasta) return
+    const escala = hasta.width / desde.width
+    setViaje(`translate(${hasta.left - desde.left}px, ${hasta.top - desde.top}px) scale(${escala})`)
+  }, [intro])
 
   // Si el video ya estaba en cache, onLoadedData no llega a dispararse
   useEffect(() => {
@@ -209,7 +222,7 @@ export default function App() {
                   onClick={b.accion}
                   aria-label={b.etiqueta}
                   title={b.etiqueta}
-                  className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-accent transition-colors hover:bg-line/40 hover:text-ink sm:text-[2.625rem]"
+                  className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-crema transition-colors hover:bg-line/40 sm:text-[2.625rem]"
                 >
                   {b.icono}
                 </button>
@@ -219,7 +232,7 @@ export default function App() {
                 onClick={siguienteVelocidad}
                 aria-label={t('controls.faster')}
                 title={t('controls.faster')}
-                className="-ml-2 cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-accent transition-colors hover:bg-line/40 hover:text-ink sm:text-[2.625rem]"
+                className="-ml-2 cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-crema transition-colors hover:bg-line/40 sm:text-[2.625rem]"
               >
                 {VELOCIDADES[velocidad]}x
               </button>
@@ -234,7 +247,7 @@ export default function App() {
                 value={Math.min(tiempo, duracion || 0)}
                 onChange={(e) => irA(Number(e.target.value))}
                 aria-label={t('controls.timeline')}
-                className="h-1 w-full cursor-pointer touch-auto accent-accent"
+                className="h-1 w-full cursor-pointer touch-auto accent-crema"
               />
               <span className="shrink-0 font-mono text-[1.3rem] leading-none tabular-nums text-muted sm:text-[1.4rem]">
                 {reloj(tiempo)} / {reloj(duracion)}
@@ -261,6 +274,7 @@ export default function App() {
       )}
 
       <img
+        ref={logoCabecera}
         src="/logo-app-place.webp"
         alt="App Place Catalog"
         width={256}
@@ -269,25 +283,44 @@ export default function App() {
       />
 
       {intro !== 'fuera' && (
-        <div
-          aria-hidden="true"
-          className={[
-            'fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-fondo px-6',
-            'transition-opacity duration-700',
-            intro === 'saliendo' ? 'opacity-0' : 'opacity-100'
-          ].join(' ')}
-        >
-          <img
-            src="/logo-app-place.webp"
-            alt=""
-            width={256}
-            height={256}
-            className="intro-logo w-[11.5rem] [image-rendering:pixelated] sm:w-[18.4rem]"
+        <>
+          <div
+            aria-hidden="true"
+            className={[
+              'fixed inset-0 z-40 bg-fondo transition-opacity duration-[900ms]',
+              intro === 'saliendo' ? 'opacity-0' : 'opacity-100'
+            ].join(' ')}
           />
-          <p className="intro-slogan whitespace-pre-line text-center font-mono text-base uppercase leading-relaxed tracking-[0.2em] text-accent sm:text-2xl">
-            {t('hero.slogan')}
-          </p>
-        </div>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 px-6"
+          >
+            <img
+              ref={logoIntro}
+              src="/logo-app-place.webp"
+              alt=""
+              width={256}
+              height={256}
+              style={intro === 'saliendo' ? { transform: viaje } : undefined}
+              className={[
+                'w-[11.5rem] origin-top-left [image-rendering:pixelated] sm:w-[18.4rem]',
+                intro === 'dentro'
+                  ? 'intro-logo'
+                  : 'transition-transform duration-[900ms] ease-[cubic-bezier(0.65,0,0.35,1)]'
+              ].join(' ')}
+            />
+            <p
+              className={[
+                'whitespace-pre-line text-center font-mono text-base uppercase leading-relaxed tracking-[0.2em] text-accent sm:text-2xl',
+                intro === 'dentro'
+                  ? 'intro-slogan'
+                  : 'opacity-0 transition-opacity duration-500'
+              ].join(' ')}
+            >
+              {t('hero.slogan')}
+            </p>
+          </div>
+        </>
       )}
 
       <p className="absolute bottom-1 right-1 z-10 rounded-full border border-line bg-surface/60 px-3 py-1.5 text-center font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:px-4 sm:py-2 sm:text-xs">
