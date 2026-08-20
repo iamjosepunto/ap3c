@@ -34,7 +34,10 @@ export default function App() {
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
   const logoIntro = useRef<HTMLImageElement>(null)
   const logoCabecera = useRef<HTMLImageElement>(null)
+  const sloganIntro = useRef<HTMLParagraphElement>(null)
+  const sloganCabecera = useRef<HTMLParagraphElement>(null)
   const [viaje, setViaje] = useState<string | undefined>(undefined)
+  const [viajeSlogan, setViajeSlogan] = useState<string | undefined>(undefined)
   const [enPausa, setEnPausa] = useState(true)
   const [velocidad, setVelocidad] = useState(0)
   const [tiempo, setTiempo] = useState(0)
@@ -53,11 +56,13 @@ export default function App() {
   // El destino se mide en pantalla, asi encaja con la cabecera en cualquier tamano
   useEffect(() => {
     if (intro !== 'saliendo') return
-    const desde = logoIntro.current?.getBoundingClientRect()
-    const hasta = logoCabecera.current?.getBoundingClientRect()
-    if (!desde || !hasta) return
-    const escala = hasta.width / desde.width
-    setViaje(`translate(${hasta.left - desde.left}px, ${hasta.top - desde.top}px) scale(${escala})`)
+    const recorrido = (a?: DOMRect, b?: DOMRect) =>
+      a && b ? `translate(${b.left - a.left}px, ${b.top - a.top}px) scale(${b.width / a.width})` : undefined
+
+    setViaje(recorrido(logoIntro.current?.getBoundingClientRect(), logoCabecera.current?.getBoundingClientRect()))
+    setViajeSlogan(
+      recorrido(sloganIntro.current?.getBoundingClientRect(), sloganCabecera.current?.getBoundingClientRect())
+    )
   }, [intro])
 
   // Si el video ya estaba en cache, onLoadedData no llega a dispararse
@@ -282,6 +287,13 @@ export default function App() {
         className="absolute left-0 top-0 z-10 w-16 sm:w-32"
       />
 
+      <p
+        ref={sloganCabecera}
+        className="absolute left-0 top-[68px] z-10 whitespace-pre-line text-center font-mono text-[0.5rem] uppercase leading-relaxed tracking-[0.2em] text-accent sm:top-[134px] sm:text-[0.75rem]"
+      >
+        {t('hero.slogan')}
+      </p>
+
       {intro !== 'fuera' && (
         <>
           <div
@@ -310,11 +322,13 @@ export default function App() {
               ].join(' ')}
             />
             <p
+              ref={sloganIntro}
+              style={intro === 'saliendo' ? { transform: viajeSlogan } : undefined}
               className={[
-                'whitespace-pre-line text-center font-mono text-base uppercase leading-relaxed tracking-[0.2em] text-accent sm:text-2xl',
+                'origin-top-left whitespace-pre-line text-center font-mono text-base uppercase leading-relaxed tracking-[0.2em] text-accent sm:text-2xl',
                 intro === 'dentro'
                   ? 'intro-slogan'
-                  : 'opacity-0 transition-opacity duration-500'
+                  : 'transition-transform duration-[900ms] ease-[cubic-bezier(0.65,0,0.35,1)]'
               ].join(' ')}
             >
               {t('hero.slogan')}
