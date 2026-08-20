@@ -27,7 +27,7 @@ export default function App() {
   const video = useRef<HTMLVideoElement>(null)
   const [animacionLista, setAnimacionLista] = useState(false)
   const [enPausa, setEnPausa] = useState(false)
-  const [velocidad, setVelocidad] = useState(0)
+  const [velocidad, setVelocidad] = useState(VELOCIDADES.length - 1)
   const [tiempo, setTiempo] = useState(0)
   const [duracion, setDuracion] = useState(0)
 
@@ -40,6 +40,9 @@ export default function App() {
   useEffect(() => {
     const v = video.current
     if (!v) return
+    // defaultPlaybackRate es el que el navegador aplica al cargar la fuente
+    v.defaultPlaybackRate = VELOCIDADES[VELOCIDADES.length - 1]
+    v.playbackRate = VELOCIDADES[VELOCIDADES.length - 1]
     const alAvanzar = () => setTiempo(v.currentTime)
     const alTenerDatos = () => setDuracion(Number.isFinite(v.duration) ? v.duration : 0)
     v.addEventListener('timeupdate', alAvanzar)
@@ -51,13 +54,14 @@ export default function App() {
     }
   }, [])
 
+  // El navegador reinicia playbackRate al cargar el video, hay que reaplicarlo
+  useEffect(() => {
+    if (video.current) video.current.playbackRate = VELOCIDADES[velocidad]
+  }, [velocidad, animacionLista])
+
   // Un solo boton recorre las velocidades y vuelve al principio
   const siguienteVelocidad = () => {
-    setVelocidad((i) => {
-      const nuevo = (i + 1) % VELOCIDADES.length
-      if (video.current) video.current.playbackRate = VELOCIDADES[nuevo]
-      return nuevo
-    })
+    setVelocidad((i) => (i + 1) % VELOCIDADES.length)
   }
 
   const irA = (segundos: number) => {
@@ -123,7 +127,7 @@ export default function App() {
         />
         {animacionLista && (
           <div className="absolute inset-x-0 bottom-20 z-20 border-y border-line/60 bg-surface/50 px-2 py-1.5 backdrop-blur-sm sm:bottom-9">
-            <div className="flex items-center justify-between">
+            <div className="relative flex items-center justify-center gap-3">
               {[
                 { etiqueta: t('controls.stop'), simbolo: '\u25A0', accion: detener },
                 {
@@ -139,12 +143,12 @@ export default function App() {
                   onClick={b.accion}
                   aria-label={b.etiqueta}
                   title={b.etiqueta}
-                  className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[0.7rem] leading-none text-muted transition-colors hover:bg-line/40 hover:text-ink sm:text-xs"
+                  className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-muted transition-colors hover:bg-line/40 hover:text-ink sm:text-[2.625rem]"
                 >
                   {b.simbolo}
                 </button>
               ))}
-              <span className="px-1 font-mono text-[0.7rem] leading-none text-accent sm:text-xs">
+              <span className="absolute right-1 font-mono text-[1.4rem] leading-none text-accent sm:text-2xl">
                 {VELOCIDADES[velocidad]}x
               </span>
             </div>
@@ -160,7 +164,7 @@ export default function App() {
                 aria-label={t('controls.timeline')}
                 className="h-1 w-full cursor-pointer accent-accent"
               />
-              <span className="shrink-0 font-mono text-[0.65rem] leading-none tabular-nums text-muted sm:text-[0.7rem]">
+              <span className="shrink-0 font-mono text-[1.3rem] leading-none tabular-nums text-muted sm:text-[1.4rem]">
                 {reloj(tiempo)} / {reloj(duracion)}
               </span>
             </div>
