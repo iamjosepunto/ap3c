@@ -32,10 +32,24 @@ export default function App() {
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
-  const [enPausa, setEnPausa] = useState(false)
+  const botonAceptar = useRef<HTMLButtonElement>(null)
+  const [enPausa, setEnPausa] = useState(true)
   const [velocidad, setVelocidad] = useState(VELOCIDADES.length - 1)
   const [tiempo, setTiempo] = useState(0)
   const [duracion, setDuracion] = useState(0)
+
+  // El dialogo bloquea la web, asi que el foco debe entrar en el
+  useEffect(() => {
+    if (cartelVisible) botonAceptar.current?.focus()
+  }, [cartelVisible])
+
+  const aceptar = () => {
+    setCartelVisible(false)
+    const v = video.current
+    if (!v) return
+    void v.play()
+    setEnPausa(false)
+  }
 
   // Si el video ya estaba en cache, onLoadedData no llega a dispararse
   useEffect(() => {
@@ -146,7 +160,6 @@ export default function App() {
         <video
           ref={video}
           src="/Prueba.mp4"
-          autoPlay
           muted
           loop
           playsInline
@@ -242,17 +255,27 @@ export default function App() {
       />
 
       {cartelVisible && (
-        <button
-          type="button"
-          onClick={() => setCartelVisible(false)}
-          className="parpadeo absolute left-1/2 top-1/2 z-30 w-[calc(100vw-2rem)] max-w-[22rem] -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-md border border-line bg-surface px-4 py-3 text-left text-lg leading-snug text-accent sm:w-[680px] sm:max-w-none sm:px-6 sm:py-5 sm:text-4xl"
-        >
-          <span className="mb-2 block font-semibold sm:mb-3">{t('hero.welcome')}</span>
-          <span className="block">{t('hero.tagline')}</span>
-          <span className="mt-3 block font-mono text-[0.65rem] uppercase leading-snug tracking-[0.14em] text-muted sm:mt-4 sm:text-sm">
-            {t('hero.dismiss')}
-          </span>
-        </button>
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-base/85 px-4 backdrop-blur-sm">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bienvenida"
+            className="w-full max-w-[23rem] rounded-md border border-line bg-surface px-4 py-3 text-left text-lg leading-snug text-accent sm:max-w-[780px] sm:px-6 sm:py-5 sm:text-4xl"
+          >
+            <span id="bienvenida" className="parpadeo mb-2 block text-base font-semibold sm:mb-3 sm:text-3xl">
+              {t('hero.welcome')}
+            </span>
+            <span className="parpadeo block">{t('hero.tagline')}</span>
+            <button
+              ref={botonAceptar}
+              type="button"
+              onClick={aceptar}
+              className="mt-4 w-full cursor-pointer rounded-md border border-accent bg-accent px-4 py-2 font-mono text-sm font-semibold uppercase tracking-[0.16em] text-deep transition-colors hover:border-ink hover:bg-ink sm:mt-6 sm:py-3 sm:text-lg"
+            >
+              {t('hero.accept')}
+            </button>
+          </div>
+        </div>
       )}
 
       <p className="absolute bottom-1 right-1 z-10 rounded-full border border-line bg-surface/60 px-3 py-1.5 text-center font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:px-4 sm:py-2 sm:text-xs">
