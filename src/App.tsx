@@ -90,7 +90,10 @@ export default function App() {
             © {new Date().getFullYear()}
             <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
           </span>
-          <span className="w-full whitespace-nowrap sm:w-auto">· {t('footer.rights')}</span>
+          <span className="w-full whitespace-nowrap sm:w-auto">
+            <span className="hidden sm:inline">· </span>
+            {t('footer.rights')}
+          </span>
         </footer>
       </div>
     </div>
