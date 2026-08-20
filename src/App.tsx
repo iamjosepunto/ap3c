@@ -43,7 +43,7 @@ export default function App() {
           height={256}
           className="w-16 shrink-0 sm:w-32"
         />
-        <span aria-hidden="true" className="parpadeo shrink-0 self-start text-3xl text-accent sm:self-center sm:text-6xl">
+        <span aria-hidden="true" className="parpadeo flex h-16 shrink-0 items-center self-start text-3xl text-accent sm:h-auto sm:self-center sm:text-6xl">
           ←
         </span>
         <p className="parpadeo max-w-[9.5rem] rounded-md border border-line bg-surface/60 px-2.5 py-1.5 text-lg leading-snug text-accent sm:w-[680px] sm:max-w-none sm:self-center sm:px-4 sm:py-1.5 sm:text-4xl">
