@@ -284,12 +284,19 @@ export default function App() {
         alt="App Place Catalog"
         width={256}
         height={256}
-        className="absolute left-0 top-0 z-10 w-16 sm:w-32"
+        className={[
+          'absolute left-0 top-0 z-10 w-16 sm:w-32',
+          intro === 'fuera' ? 'opacity-100' : 'opacity-0'
+        ].join(' ')}
       />
 
       <p
         ref={sloganCabecera}
-        className="absolute left-0 top-[68px] z-10 whitespace-pre-line text-center font-mono text-[0.5rem] uppercase leading-relaxed tracking-[0.2em] text-accent sm:top-[134px] sm:text-[0.75rem]"
+        className={[
+          'absolute left-[70px] top-[19px] z-10 whitespace-pre-line text-center font-mono text-[0.5rem] uppercase leading-relaxed tracking-[0.2em] text-accent',
+          'sm:left-0 sm:top-[134px] sm:text-[0.75rem]',
+          intro === 'fuera' ? 'opacity-100' : 'opacity-0'
+        ].join(' ')}
       >
         {t('hero.slogan')}
       </p>
