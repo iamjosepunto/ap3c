@@ -51,7 +51,7 @@ export default function App() {
         </p>
       </div>
 
-      <p className="absolute bottom-1 right-1 z-10 rounded-full border border-line bg-surface/60 px-4 py-2 text-center font-mono text-[0.7rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:text-xs">
+      <p className="absolute bottom-1 right-1 z-10 rounded-full border border-line bg-surface/60 px-3 py-1.5 text-center font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-9 sm:right-10 sm:px-4 sm:py-2 sm:text-xs">
         {t('hero.status')
           .split('·')
           .map((linea) => (
