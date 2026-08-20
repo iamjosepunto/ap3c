@@ -35,6 +35,14 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
+      <img
+        src="/Prueba.gif"
+        alt=""
+        width={720}
+        height={1606}
+        className="absolute left-1/2 top-0 h-dvh w-auto max-w-none -translate-x-1/2"
+      />
+
       <div className="absolute left-0 top-0 z-10 flex items-start gap-0 sm:gap-1">
         <img
           src="/logo-app-place.webp"
