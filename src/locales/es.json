@@ -7,7 +7,8 @@
     "eyebrow": "ap3c.app",
     "title": "App Place",
     "tagline": "Dispondrás de las mejores aplicaciones instalándote una única app android",
-    "status": "En desarrollo · Android"
+    "status": "En desarrollo · Android",
+    "loading": "Cargando animación"
   },
   "language": {
     "label": "Idioma",

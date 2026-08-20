@@ -1,5 +1,5 @@
 ﻿// UBICACION: src/App.tsx
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
 
@@ -16,6 +16,13 @@ function setMeta(selector: string, content: string) {
 export default function App() {
   const { t, i18n } = useTranslation()
   const language = i18n.resolvedLanguage ?? 'en'
+  const animacion = useRef<HTMLImageElement>(null)
+  const [animacionLista, setAnimacionLista] = useState(false)
+
+  // Si la imagen ya estaba en cache, onLoad no llega a dispararse
+  useEffect(() => {
+    if (animacion.current?.complete) setAnimacionLista(true)
+  }, [])
 
   // El idioma activo debe reflejarse en el documento, no solo en la interfaz
   useEffect(() => {
@@ -36,12 +43,34 @@ export default function App() {
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
       <img
+        ref={animacion}
         src="/Prueba.gif"
         alt=""
         width={720}
         height={1606}
-        className="absolute left-1/2 top-0 h-dvh w-auto max-w-none -translate-x-1/2"
+        onLoad={() => setAnimacionLista(true)}
+        className={[
+          'absolute left-1/2 top-0 h-dvh w-auto max-w-none -translate-x-1/2',
+          'transition-opacity duration-500',
+          animacionLista ? 'opacity-100' : 'opacity-0'
+        ].join(' ')}
       />
+
+      {!animacionLista && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3"
+        >
+          <span
+            aria-hidden="true"
+            className="size-5 animate-spin rounded-full border-2 border-line border-t-accent"
+          />
+          <span className="font-mono text-xs uppercase tracking-[0.16em] text-muted">
+            {t('hero.loading')}
+          </span>
+        </div>
+      )}
 
       <div className="absolute left-0 top-0 z-10 flex items-start gap-0 sm:gap-1">
         <img
