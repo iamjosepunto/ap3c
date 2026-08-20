@@ -198,11 +198,11 @@ export default function App() {
           ref={video}
           src="/Prueba.mp4"
           muted
-          loop
           playsInline
           preload="auto"
           onLoadedData={() => setAnimacionLista(true)}
           onClick={alternarPanel}
+          onEnded={() => setEnPausa(true)}
           className={[
             'h-full w-full',
             'transition-opacity duration-500',
