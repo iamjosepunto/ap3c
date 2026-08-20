@@ -29,7 +29,7 @@ export default function App() {
   const [animacionLista, setAnimacionLista] = useState(false)
   const [intro, setIntro] = useState<'dentro' | 'saliendo' | 'fuera'>('dentro')
   const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
-  const [panelVisible, setPanelVisible] = useState(true)
+  const [panelVisible, setPanelVisible] = useState(false)
   const ocultador = useRef<number | null>(null)
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
@@ -113,16 +113,11 @@ export default function App() {
     })
   }
 
-  // La cuenta atras empieza cuando la presentacion ha terminado, no antes
   useEffect(() => {
-    if (intro !== 'fuera') return
-    setPanelVisible(true)
-    posponerOcultado()
     return () => {
       if (ocultador.current) window.clearTimeout(ocultador.current)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [intro])
+  }, [])
 
   // El panel se arrastra solo en vertical y sin salirse del area del video
   const empezarArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
