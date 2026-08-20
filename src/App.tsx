@@ -360,7 +360,7 @@ export default function App() {
                 onClick={alternarPantallaCompleta}
                 aria-label={pantallaCompleta ? t('controls.exitFullscreen') : t('controls.fullscreen')}
                 title={pantallaCompleta ? t('controls.exitFullscreen') : t('controls.fullscreen')}
-                className="ml-auto cursor-pointer rounded-sm px-2 py-1 text-crema transition-colors hover:bg-line/40"
+                className="cursor-pointer rounded-sm px-2 py-1 font-mono text-[2.45rem] leading-none text-crema transition-colors hover:bg-line/40 sm:text-[2.625rem]"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -369,7 +369,7 @@ export default function App() {
                   strokeWidth={2}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="h-7 w-7 sm:h-8 sm:w-8"
+                  className="block h-[0.85em] w-[0.85em]"
                 >
                   {pantallaCompleta ? (
                     <>
@@ -397,7 +397,7 @@ export default function App() {
                 strokeWidth={1.1}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-[46px] w-[18px] shrink-0 text-crema/60"
+                className="ml-auto h-[46px] w-[18px] shrink-0 text-crema/60"
               >
                 <path d="M8 3v40" />
                 <path d="M2.5 8 8 3l5.5 5" />
