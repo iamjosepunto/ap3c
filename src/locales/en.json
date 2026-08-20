@@ -28,5 +28,18 @@
     "faster": "Faster",
     "timeline": "Timeline",
     "drag": "Drag to move the panel"
+  },
+  "videos": {
+    "v0": "First time",
+    "v1": "Languages",
+    "v2": "Friends",
+    "v3": "Recipes",
+    "v4": "Planner",
+    "v5": "Music",
+    "v6": "Photos",
+    "v7": "Sports",
+    "v8": "Finance",
+    "v9": "News",
+    "v10": "Travel"
   }
 }

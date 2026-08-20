@@ -28,5 +28,18 @@
     "faster": "Más rápido",
     "timeline": "Línea de tiempo",
     "drag": "Arrastra para mover el panel"
+  },
+  "videos": {
+    "v0": "Primera vez",
+    "v1": "Idiomas",
+    "v2": "Amistades",
+    "v3": "Recetas",
+    "v4": "Agenda",
+    "v5": "Musica",
+    "v6": "Fotos",
+    "v7": "Deporte",
+    "v8": "Finanzas",
+    "v9": "Noticias",
+    "v10": "Viajes"
   }
 }

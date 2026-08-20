@@ -6,6 +6,20 @@ import LanguageSwitcher from './components/LanguageSwitcher'
 
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
+const VIDEOS = [
+  '/Prueba.mp4',
+  '/video-01.mp4',
+  '/video-02.mp4',
+  '/video-03.mp4',
+  '/video-04.mp4',
+  '/video-05.mp4',
+  '/video-06.mp4',
+  '/video-07.mp4',
+  '/video-08.mp4',
+  '/video-09.mp4',
+  '/video-10.mp4'
+]
+
 function reloj(segundos: number) {
   const m = Math.floor(segundos / 60)
   const s = Math.floor(segundos % 60)
@@ -30,6 +44,7 @@ export default function App() {
   const [intro, setIntro] = useState<'dentro' | 'saliendo' | 'fuera'>('dentro')
   const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
   const [panelVisible, setPanelVisible] = useState(false)
+  const [videoActivo, setVideoActivo] = useState(0)
   const ocultador = useRef<number | null>(null)
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
@@ -148,6 +163,14 @@ export default function App() {
     panel.current?.releasePointerCapture(e.pointerId)
   }
 
+  const elegirVideo = (indice: number) => {
+    setVideoActivo(indice)
+    setEnPausa(true)
+    setTiempo(0)
+    setDuracion(0)
+    setAnimacionLista(false)
+  }
+
   const irA = (segundos: number) => {
     const v = video.current
     if (!v) return
@@ -193,10 +216,31 @@ export default function App() {
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
-      <div ref={zonaVideo} className="absolute inset-x-0 top-[70px] mx-auto aspect-[720/1606] h-[calc(100dvh-134px)] sm:top-0 sm:h-dvh">
+      <nav
+        aria-label="Videos"
+        className="absolute bottom-[64px] left-0 top-[70px] z-10 flex w-[70px] flex-col justify-between sm:bottom-[60px] sm:top-[190px] sm:w-[220px] sm:px-4"
+      >
+        {VIDEOS.map((_, i) => (
+          <button
+            key={VIDEOS[i]}
+            type="button"
+            onClick={() => elegirVideo(i)}
+            aria-current={i === videoActivo ? 'true' : undefined}
+            className={[
+              'cursor-pointer rounded-sm px-1.5 py-1 text-left font-mono text-[0.66rem] uppercase leading-tight tracking-[0.08em]',
+              'transition-colors sm:px-3 sm:py-2 sm:text-[1.05rem] sm:tracking-[0.14em]',
+              i === videoActivo ? 'bg-surface/70 text-crema' : 'text-muted hover:text-crema'
+            ].join(' ')}
+          >
+            {t(`videos.v${i}`)}
+          </button>
+        ))}
+      </nav>
+
+      <div ref={zonaVideo} className="absolute right-0 top-[70px] aspect-[720/1606] h-[calc(100dvh-134px)] sm:top-0 sm:h-dvh">
         <video
           ref={video}
-          src="/Prueba.mp4"
+          src={VIDEOS[videoActivo]}
           muted
           playsInline
           preload="auto"
