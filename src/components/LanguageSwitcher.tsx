@@ -13,7 +13,7 @@ export default function LanguageSwitcher() {
   const current = i18n.resolvedLanguage as SupportedLanguage | undefined
 
   return (
-    <nav aria-label={t('language.label')} className="flex items-center gap-0 sm:flex-col-reverse sm:items-start sm:gap-1">
+    <nav aria-label={t('language.label')} className="flex items-center gap-0 sm:flex-col sm:items-start sm:gap-1">
       {SUPPORTED_LANGUAGES.map((code) => {
         const active = current === code
         return (
