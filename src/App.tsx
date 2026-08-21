@@ -579,9 +579,9 @@ export default function App() {
         style={
           esEscritorio && !pantallaCompleta ? { left: borde.izq, maxWidth: borde.ancho } : undefined
         } className="absolute bottom-1 left-2 z-20 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:justify-end sm:text-right sm:text-xs">
-        <span className="flex items-center gap-1.5">
+        <span className="flex flex-none items-center gap-1.5 whitespace-nowrap">
           © {new Date().getFullYear()}
-          <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />
+          <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-3" />
         </span>
         <span className="w-full whitespace-nowrap text-[0.6rem] sm:w-auto sm:whitespace-normal sm:text-xs">
           {t('footer.rights')}
