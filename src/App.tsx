@@ -588,7 +588,7 @@ export default function App() {
         </span>
       </footer>
 
-      <p style={esEscritorio && !pantallaCompleta ? { left: borde.der } : undefined} className="absolute bottom-1 right-1 z-10 rounded-full sm:right-auto border border-line bg-surface/60 px-3 py-1.5 text-center font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.16em] text-muted sm:bottom-2 sm:right-0 sm:px-4 sm:py-2 sm:text-xs">
+      <p style={esEscritorio && !pantallaCompleta ? { left: borde.der } : undefined} className="absolute bottom-1 right-1 z-10 rounded-full sm:right-auto border border-line bg-surface/60 px-3 py-1 text-center font-mono text-[0.6rem] uppercase leading-tight tracking-[0.16em] text-muted sm:bottom-2 sm:right-0 sm:px-4 sm:py-[10px] sm:text-xs">
         {t('hero.status')
           .split('·')
           .map((linea) => (
