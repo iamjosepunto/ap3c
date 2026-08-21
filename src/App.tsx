@@ -577,7 +577,7 @@ export default function App() {
 
       <footer
         style={
-          esEscritorio && !pantallaCompleta ? { left: borde.izq, maxWidth: borde.ancho } : undefined
+          esEscritorio && !pantallaCompleta ? { left: borde.izq - 16, maxWidth: borde.ancho } : undefined
         } className="absolute bottom-1 left-2 z-20 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:justify-end sm:text-right sm:text-xs">
         <span className="flex flex-none items-center gap-1.5 whitespace-nowrap">
           © {new Date().getFullYear()}
