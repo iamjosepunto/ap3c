@@ -33,15 +33,15 @@
   },
   "videos": {
     "v0": "Start",
-    "v1": "Languages",
-    "v2": "Friends",
-    "v3": "Recipes",
-    "v4": "Planner",
-    "v5": "Music",
-    "v6": "Photos",
-    "v7": "Sports",
-    "v8": "Finance",
-    "v9": "News",
+    "v1": "Change language",
+    "v2": "Upload an image",
+    "v3": "Change profile picture",
+    "v4": "Change nickname",
+    "v5": "Location",
+    "v6": "Sign out",
+    "v7": "Delete account",
+    "v8": "Warnings",
+    "v9": "Apps",
     "v10": "Contact"
   }
 }

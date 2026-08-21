@@ -33,15 +33,15 @@
   },
   "videos": {
     "v0": "Empezar",
-    "v1": "Idiomas",
-    "v2": "Amistades",
-    "v3": "Recetas",
-    "v4": "Agenda",
-    "v5": "Musica",
-    "v6": "Fotos",
-    "v7": "Deporte",
-    "v8": "Finanzas",
-    "v9": "Noticias",
+    "v1": "Cambiar idioma",
+    "v2": "Subir una imagen",
+    "v3": "Cambiar imagen de perfil",
+    "v4": "Cambiar nickname",
+    "v5": "Ubicación",
+    "v6": "Cerrar sesión",
+    "v7": "Eliminar cuenta",
+    "v8": "Warnings",
+    "v9": "Apps",
     "v10": "Contacto"
   }
 }
