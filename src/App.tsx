@@ -300,7 +300,7 @@ export default function App() {
         aria-label="Videos"
         style={esEscritorio && !pantallaCompleta ? { left: borde.izq } : undefined}
         className={[
-          'absolute bottom-[64px] left-0 top-[70px] z-10 flex w-[70px] flex-col sm:bottom-[60px] sm:top-[190px] sm:w-fit sm:pl-3 sm:pr-1',
+          'absolute bottom-[44px] left-0 top-[66px] z-10 flex w-[70px] flex-col sm:bottom-[60px] sm:top-[190px] sm:w-fit sm:pl-3 sm:pr-1',
           pantallaCompleta ? 'hidden' : ''
         ].join(' ')}
       >
@@ -329,7 +329,7 @@ export default function App() {
         className={
           pantallaCompleta
             ? 'fixed inset-0 z-40 bg-fondo'
-            : 'absolute left-[70px] right-0 top-[70px] mx-auto aspect-[720/1606] h-[calc(100dvh-134px)] sm:left-[220px] sm:top-0 sm:h-dvh'
+            : 'absolute bottom-[48px] left-[70px] right-0 top-[58px] m-auto aspect-[720/1606] h-[min(calc(100dvh-106px),calc((100vw-70px)*2.2306))] sm:bottom-0 sm:left-[220px] sm:top-0 sm:m-0 sm:h-dvh'
         }
       >
         <video
