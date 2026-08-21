@@ -491,13 +491,13 @@ export default function App() {
         <div
           role="status"
           aria-live="polite"
-          className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center gap-[18px]"
         >
           <span
             aria-hidden="true"
-            className="size-5 animate-spin rounded-full border-2 border-line border-t-accent"
+            className="size-[30px] animate-spin rounded-full border-[3px] border-line border-t-accent"
           />
-          <span className="font-mono text-xs uppercase tracking-[0.16em] text-muted">
+          <span className="font-mono text-lg uppercase tracking-[0.16em] text-muted">
             {t('hero.loading')}
           </span>
         </div>
@@ -578,7 +578,7 @@ export default function App() {
       <footer
         style={
           esEscritorio && !pantallaCompleta ? { left: borde.izq, maxWidth: borde.ancho } : undefined
-        } className="absolute bottom-1 left-2 z-20 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:text-xs">
+        } className="absolute bottom-1 left-2 z-20 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:justify-end sm:text-right sm:text-xs">
         <span className="flex items-center gap-1.5">
           © {new Date().getFullYear()}
           <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-4" />

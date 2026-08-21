@@ -8,7 +8,7 @@
     "title": "App Place",
     "tagline": "The purpose of this website is to explain how you can enjoy our best applications (learning languages, meeting new people, etc.) by installing only our app from the Google Play Store.",
     "status": "In development · Android",
-    "loading": "Loading animation",
+    "loading": "Loading video",
     "welcome": "Welcome to the website of our Android app APP PLACE CATALOG:",
     "accept": "GOT IT",
     "slogan": "Install one\nEnjoy them all"
@@ -19,7 +19,7 @@
     "en": "English"
   },
   "footer": {
-    "rights": "All rights reserved."
+    "rights": "All rights reserved"
   },
   "controls": {
     "stop": "Stop",
