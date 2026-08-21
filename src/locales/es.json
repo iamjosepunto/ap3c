@@ -32,7 +32,7 @@
     "exitFullscreen": "Salir de pantalla completa"
   },
   "videos": {
-    "v0": "Primera vez",
+    "v0": "Empezar",
     "v1": "Idiomas",
     "v2": "Amistades",
     "v3": "Recetas",
@@ -42,6 +42,6 @@
     "v7": "Deporte",
     "v8": "Finanzas",
     "v9": "Noticias",
-    "v10": "Viajes"
+    "v10": "Contacto"
   }
 }

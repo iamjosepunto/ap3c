@@ -32,7 +32,7 @@
     "exitFullscreen": "Exit fullscreen"
   },
   "videos": {
-    "v0": "First time",
+    "v0": "Start",
     "v1": "Languages",
     "v2": "Friends",
     "v3": "Recipes",
@@ -42,6 +42,6 @@
     "v7": "Sports",
     "v8": "Finance",
     "v9": "News",
-    "v10": "Travel"
+    "v10": "Contact"
   }
 }
