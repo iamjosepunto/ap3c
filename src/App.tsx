@@ -311,6 +311,10 @@ export default function App() {
 
   return (
     <div className="relative min-h-dvh overflow-hidden">
+      <div className="fixed inset-x-0 top-0 z-[60] bg-accent px-2 py-1 text-center font-mono text-[0.65rem] leading-tight text-fondo">
+        {diagnostico || 'iniciando'}
+      </div>
+
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
 
@@ -502,10 +506,6 @@ export default function App() {
               <span className="shrink-0 font-mono text-[1.3rem] leading-none tabular-nums text-muted sm:text-[1.4rem]">
                 {reloj(tiempo)} / {reloj(duracion)}
               </span>
-            </div>
-
-            <div className="mt-1 truncate text-center font-mono text-[0.55rem] text-accent">
-              {diagnostico}
             </div>
           </div>
         )}
