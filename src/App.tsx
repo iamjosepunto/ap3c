@@ -361,12 +361,24 @@ export default function App() {
             if (video.current) video.current.currentTime = 0
             setTiempo(0)
           }}
-          className={[
-            'h-full w-full object-contain',
-            'transition-opacity duration-500',
-            animacionLista ? 'opacity-100' : 'opacity-0'
-          ].join(' ')}
+          className="h-full w-full object-contain"
         />
+
+        {!animacionLista && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="pointer-events-none absolute inset-0 flex items-center justify-center gap-[18px]"
+          >
+            <span
+              aria-hidden="true"
+              className="size-[30px] animate-spin rounded-full border-[3px] border-line border-t-accent"
+            />
+            <span className="font-mono text-lg uppercase tracking-[0.16em] text-muted">
+              {t('hero.loading')}
+            </span>
+          </div>
+        )}
         {animacionLista && (
           <div
             ref={panel}
@@ -501,22 +513,6 @@ export default function App() {
           </div>
         )}
       </div>
-
-      {!animacionLista && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="pointer-events-none absolute inset-0 flex items-center justify-center gap-[18px]"
-        >
-          <span
-            aria-hidden="true"
-            className="size-[30px] animate-spin rounded-full border-[3px] border-line border-t-accent"
-          />
-          <span className="font-mono text-lg uppercase tracking-[0.16em] text-muted">
-            {t('hero.loading')}
-          </span>
-        </div>
-      )}
 
       <img
         ref={logoCabecera}
