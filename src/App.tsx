@@ -6,6 +6,8 @@ import LanguageSwitcher from './components/LanguageSwitcher'
 
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
+const PORTADAS = Array.from({ length: 11 }, (_, i) => `/portada-${String(i).padStart(2, '0')}.webp`)
+
 const VIDEOS = [
   '/Prueba.mp4',
   '/video-01.mp4',
@@ -47,7 +49,6 @@ export default function App() {
   const [videoActivo, setVideoActivo] = useState(0)
   const [pantallaCompleta, setPantallaCompleta] = useState(false)
   const [cajaUtil, setCajaUtil] = useState<{ izq: number; ancho: number } | null>(null)
-  const [diagnostico, setDiagnostico] = useState('')
   const menu = useRef<HTMLElement>(null)
   const [borde, setBorde] = useState({ izq: 0, der: 0, ancho: 0 })
   const [esEscritorio, setEsEscritorio] = useState(false)
@@ -94,13 +95,6 @@ export default function App() {
     const v = video.current
     if (!v) return
     const listo = () => setAnimacionLista(true)
-    // TEMPORAL: informe en pantalla para depurar navegadores que no cargan el video
-    const informar = () => {
-      const err = v.error ? `error ${v.error.code}` : 'sin error'
-      setDiagnostico(`red ${v.networkState} · datos ${v.readyState} · ${err} · ${v.currentSrc.split('/').pop()}`)
-    }
-    const reloj = window.setInterval(informar, 500)
-    informar()
     const eventos = ['loadedmetadata', 'loadeddata', 'canplay', 'error'] as const
     eventos.forEach((e) => v.addEventListener(e, listo))
     if (v.readyState >= 1) listo()
@@ -108,7 +102,6 @@ export default function App() {
     return () => {
       eventos.forEach((e) => v.removeEventListener(e, listo))
       window.clearTimeout(respaldo)
-      window.clearInterval(reloj)
     }
   }, [videoActivo])
 
@@ -311,9 +304,6 @@ export default function App() {
 
   return (
     <div className="relative min-h-dvh overflow-hidden">
-      <div className="fixed inset-x-0 top-0 z-[60] bg-accent px-2 py-1 text-center font-mono text-[0.65rem] leading-tight text-fondo">
-        {diagnostico || 'iniciando'}
-      </div>
 
       <div aria-hidden="true" className="field pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="halo pointer-events-none absolute inset-0" />
@@ -359,6 +349,7 @@ export default function App() {
         <video
           ref={video}
           src={VIDEOS[videoActivo]}
+          poster={PORTADAS[videoActivo]}
           muted
           playsInline
           preload="metadata"
