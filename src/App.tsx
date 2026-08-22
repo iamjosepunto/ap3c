@@ -47,6 +47,7 @@ export default function App() {
   const [videoActivo, setVideoActivo] = useState(0)
   const [pantallaCompleta, setPantallaCompleta] = useState(false)
   const [cajaUtil, setCajaUtil] = useState<{ izq: number; ancho: number } | null>(null)
+  const [diagnostico, setDiagnostico] = useState('')
   const menu = useRef<HTMLElement>(null)
   const [borde, setBorde] = useState({ izq: 0, der: 0, ancho: 0 })
   const [esEscritorio, setEsEscritorio] = useState(false)
@@ -93,6 +94,13 @@ export default function App() {
     const v = video.current
     if (!v) return
     const listo = () => setAnimacionLista(true)
+    // TEMPORAL: informe en pantalla para depurar navegadores que no cargan el video
+    const informar = () => {
+      const err = v.error ? `error ${v.error.code}` : 'sin error'
+      setDiagnostico(`red ${v.networkState} · datos ${v.readyState} · ${err} · ${v.currentSrc.split('/').pop()}`)
+    }
+    const reloj = window.setInterval(informar, 500)
+    informar()
     const eventos = ['loadedmetadata', 'loadeddata', 'canplay', 'error'] as const
     eventos.forEach((e) => v.addEventListener(e, listo))
     if (v.readyState >= 1) listo()
@@ -100,6 +108,7 @@ export default function App() {
     return () => {
       eventos.forEach((e) => v.removeEventListener(e, listo))
       window.clearTimeout(respaldo)
+      window.clearInterval(reloj)
     }
   }, [videoActivo])
 
@@ -493,6 +502,10 @@ export default function App() {
               <span className="shrink-0 font-mono text-[1.3rem] leading-none tabular-nums text-muted sm:text-[1.4rem]">
                 {reloj(tiempo)} / {reloj(duracion)}
               </span>
+            </div>
+
+            <div className="mt-1 truncate text-center font-mono text-[0.55rem] text-accent">
+              {diagnostico}
             </div>
           </div>
         )}
