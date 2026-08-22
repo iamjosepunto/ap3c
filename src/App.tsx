@@ -87,10 +87,21 @@ export default function App() {
     )
   }, [intro])
 
-  // Si el video ya estaba en cache, onLoadedData no llega a dispararse
+  // Navegadores con ahorro de datos ignoran el preload y no disparan onLoadedData.
+  // Se atiende a varios eventos y, si ninguno llega, se muestra igualmente
   useEffect(() => {
-    if ((video.current?.readyState ?? 0) >= 2) setAnimacionLista(true)
-  }, [])
+    const v = video.current
+    if (!v) return
+    const listo = () => setAnimacionLista(true)
+    const eventos = ['loadedmetadata', 'loadeddata', 'canplay', 'error'] as const
+    eventos.forEach((e) => v.addEventListener(e, listo))
+    if (v.readyState >= 1) listo()
+    const respaldo = window.setTimeout(listo, 4000)
+    return () => {
+      eventos.forEach((e) => v.removeEventListener(e, listo))
+      window.clearTimeout(respaldo)
+    }
+  }, [videoActivo])
 
   // Mantiene sincronizados el reloj y la barra con la reproduccion
   useEffect(() => {
@@ -337,7 +348,7 @@ export default function App() {
           src={VIDEOS[videoActivo]}
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           onLoadedData={() => setAnimacionLista(true)}
           onClick={alternarPanel}
           onDoubleClick={alternarPantallaCompleta}
