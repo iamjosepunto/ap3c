@@ -265,6 +265,8 @@ export default function App() {
     setTiempo(0)
     setDuracion(0)
     setAnimacionLista(false)
+    setPanelVisible(true)
+    posponerOcultado()
   }
 
   const irA = (segundos: number) => {
