@@ -146,11 +146,16 @@ export default function App() {
     })
   }
 
+  // Al terminar la presentacion el panel se muestra y arranca su cuenta atras
   useEffect(() => {
+    if (intro !== 'fuera') return
+    setPanelVisible(true)
+    posponerOcultado()
     return () => {
       if (ocultador.current) window.clearTimeout(ocultador.current)
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [intro])
 
   // El panel se arrastra solo en vertical y sin salirse del area del video
   const empezarArrastre = (e: ReactPointerEvent<HTMLDivElement>) => {
