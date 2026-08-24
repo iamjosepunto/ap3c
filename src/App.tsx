@@ -379,8 +379,7 @@ export default function App() {
             </span>
           </div>
         )}
-        {animacionLista && (
-          <div
+        <div
             ref={panel}
             onPointerDown={empezarArrastre}
             onPointerMove={moverArrastre}
@@ -510,8 +509,7 @@ export default function App() {
                 {reloj(tiempo)} / {reloj(duracion)}
               </span>
             </div>
-          </div>
-        )}
+        </div>
       </div>
 
       <img
