@@ -3,10 +3,19 @@ import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
+import type { SupportedLanguage } from './i18n'
 
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
-const PORTADAS = Array.from({ length: 11 }, (_, i) => `/portada-${String(i).padStart(2, '0')}.webp`)
+const PORTADAS: Record<SupportedLanguage, string[]> = {
+  en: Array.from({ length: 11 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-en.webp`),
+  es: Array.from({ length: 11 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-es.webp`)
+}
+
+// La portada depende del idioma activo; un idioma inesperado cae al ingles
+function portadaDe(idioma: string, indice: number) {
+  return (PORTADAS[idioma as SupportedLanguage] ?? PORTADAS.en)[indice]
+}
 
 const VIDEOS = [
   '/Prueba.mp4',
@@ -356,7 +365,7 @@ export default function App() {
         <video
           ref={video}
           src={VIDEOS[videoActivo]}
-          poster={PORTADAS[videoActivo]}
+          poster={portadaDe(language, videoActivo)}
           muted
           playsInline
           preload="metadata"
