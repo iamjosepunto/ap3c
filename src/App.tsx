@@ -385,7 +385,7 @@ export default function App() {
               'transition-colors sm:px-3 sm:py-2 sm:text-[1.05rem] sm:tracking-[0.14em]',
               'border-l-[3px]',
               i === videoActivo
-                ? 'border-accent bg-surface/70 text-crema'
+                ? 'border-accent bg-logo text-crema'
                 : 'border-transparent text-muted hover:border-line hover:text-crema'
             ].join(' ')}
           >
