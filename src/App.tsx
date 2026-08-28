@@ -4,6 +4,8 @@ import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
 import type { SupportedLanguage } from './i18n'
+import i18next from './i18n'
+import { leerRuta, rutaDe } from './rutas'
 
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
@@ -42,6 +44,11 @@ const OG_LOCALES: Record<string, string> = {
   en: 'en_US'
 }
 
+// La direccion manda sobre el idioma guardado: entrar en /es/... deja la web
+// en espanol. Se resuelve antes del primer render para que no haya parpadeo
+const RUTA_INICIAL = leerRuta(window.location.pathname)
+if (RUTA_INICIAL) void i18next.changeLanguage(RUTA_INICIAL.idioma)
+
 function setMeta(selector: string, content: string) {
   const tag = document.head.querySelector<HTMLMetaElement>(selector)
   if (tag) tag.content = content
@@ -55,7 +62,7 @@ export default function App() {
   const [intro, setIntro] = useState<'dentro' | 'saliendo' | 'fuera'>('dentro')
   const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
   const [panelVisible, setPanelVisible] = useState(false)
-  const [videoActivo, setVideoActivo] = useState(0)
+  const [videoActivo, setVideoActivo] = useState(RUTA_INICIAL?.indice ?? 0)
   const [pantallaCompleta, setPantallaCompleta] = useState(false)
   const [cajaUtil, setCajaUtil] = useState<{ izq: number; ancho: number } | null>(null)
   const menu = useRef<HTMLElement>(null)
@@ -268,7 +275,7 @@ export default function App() {
     return () => document.removeEventListener('fullscreenchange', alCambiar)
   }, [])
 
-  const elegirVideo = (indice: number) => {
+  const mostrarVideo = (indice: number) => {
     setVideoActivo(indice)
     setEnPausa(true)
     setTiempo(0)
@@ -277,6 +284,24 @@ export default function App() {
     setPanelVisible(true)
     posponerOcultado()
   }
+
+  // Pulsar en el menu anade una entrada al historial: el boton atras funciona
+  const elegirVideo = (indice: number) => {
+    mostrarVideo(indice)
+    window.history.pushState(null, '', rutaDe(language, indice))
+  }
+
+  // Atras y adelante del navegador
+  useEffect(() => {
+    const alNavegar = () => {
+      const ruta = leerRuta(window.location.pathname)
+      if (!ruta) return
+      mostrarVideo(ruta.indice)
+      if (ruta.idioma !== language) void i18n.changeLanguage(ruta.idioma)
+    }
+    window.addEventListener('popstate', alNavegar)
+    return () => window.removeEventListener('popstate', alNavegar)
+  })
 
   const irA = (segundos: number) => {
     const v = video.current
@@ -305,18 +330,29 @@ export default function App() {
     setEnPausa(true)
   }
 
-  // El idioma activo debe reflejarse en el documento, no solo en la interfaz
+  // El idioma y el video activos deben reflejarse en el documento y en la
+  // direccion. Tambien cubre la entrada por la raiz, que no tiene camino valido
   useEffect(() => {
-    const title = t('meta.title')
+    const camino = rutaDe(language, videoActivo)
+    if (window.location.pathname !== camino) {
+      window.history.replaceState(null, '', camino)
+    }
+
+    const title = `${t(`videos.v${videoActivo}`)} \u2014 ${t('hero.title')}`
     const description = t('meta.description')
+    const url = `https://ap3c.app${camino}`
 
     document.documentElement.lang = language
     document.title = title
     setMeta('meta[name="description"]', description)
     setMeta('meta[property="og:title"]', title)
     setMeta('meta[property="og:description"]', description)
+    setMeta('meta[property="og:url"]', url)
     setMeta('meta[property="og:locale"]', OG_LOCALES[language] ?? 'en_US')
-  }, [language, t])
+
+    const canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+    if (canonical) canonical.href = url
+  }, [language, videoActivo, t])
 
   return (
     <div className="relative min-h-dvh overflow-hidden">
