@@ -109,6 +109,14 @@ export default function App() {
     )
   }, [intro])
 
+  // Los puntos en obras comparten archivo, asi que al saltar entre ellos el src
+  // no cambia: el navegador no recarga y el <video> conserva el fotograma ya
+  // decodificado, con lo que la portada nueva no llegaria a verse. load() lo
+  // devuelve a su estado inicial y la portada vuelve a pintarse
+  useEffect(() => {
+    video.current?.load()
+  }, [videoActivo])
+
   // Navegadores con ahorro de datos ignoran el preload y no disparan onLoadedData.
   // Se atiende a varios eventos y, si ninguno llega, se muestra igualmente
   useEffect(() => {
