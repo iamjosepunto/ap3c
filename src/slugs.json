@@ -1,30 +1,42 @@
 {
-  "en": [
-    "requirements",
-    "start",
-    "change-language",
-    "upload-an-image",
-    "change-profile-picture",
-    "change-nickname",
-    "location",
-    "sign-out",
-    "delete-account",
-    "warnings",
-    "apps",
-    "contact"
-  ],
-  "es": [
-    "requisitos",
-    "empezar",
-    "cambiar-idioma",
-    "subir-una-imagen",
-    "cambiar-imagen-de-perfil",
-    "cambiar-nickname",
-    "ubicacion",
-    "cerrar-sesion",
-    "eliminar-cuenta",
-    "warnings",
-    "apps",
-    "contacto"
-  ]
+  "principal": {
+    "en": [
+      "requirements",
+      "start",
+      "change-language",
+      "upload-an-image",
+      "change-profile-picture",
+      "change-nickname",
+      "location",
+      "sign-out",
+      "delete-account",
+      "warnings",
+      "apps",
+      "contact"
+    ],
+    "es": [
+      "requisitos",
+      "empezar",
+      "cambiar-idioma",
+      "subir-una-imagen",
+      "cambiar-imagen-de-perfil",
+      "cambiar-nickname",
+      "ubicacion",
+      "cerrar-sesion",
+      "eliminar-cuenta",
+      "warnings",
+      "apps",
+      "contacto"
+    ]
+  },
+  "apps": {
+    "en": [
+      "languages",
+      "love-and-friends"
+    ],
+    "es": [
+      "languages",
+      "love-and-friends"
+    ]
+  }
 }

@@ -44,5 +44,10 @@
     "v9": "Warnings",
     "v10": "Apps",
     "v11": "Contacto"
+  },
+  "apps": {
+    "volver": "Volver",
+    "languages": "Languages",
+    "loveAndFriends": "Love & Friends"
   }
 }

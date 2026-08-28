@@ -15,9 +15,12 @@ type Idioma = (typeof IDIOMAS)[number]
 // Se lee el JSON en vez de importar src/rutas.ts: un import relativo sin
 // extension rompe tsc cuando moduleResolution es node16 o nodenext
 const RAIZ = process.cwd()
-const SLUGS = JSON.parse(
+const TABLA = JSON.parse(
   readFileSync(join(RAIZ, 'src', 'slugs.json'), 'utf8')
-) as Record<Idioma, string[]>
+) as { principal: Record<Idioma, string[]>; apps: Record<Idioma, string[]> }
+const SLUGS = TABLA.principal
+const SLUGS_APPS = TABLA.apps
+const APPS = SLUGS.en.indexOf('apps')
 
 function leerDiccionario(idioma: Idioma) {
   const crudo = readFileSync(join(RAIZ, 'src', 'locales', `${idioma}.json`), 'utf8')
@@ -25,6 +28,7 @@ function leerDiccionario(idioma: Idioma) {
     meta: { title: string; description: string }
     hero: { title: string }
     videos: Record<string, string>
+    apps: Record<string, string>
   }
 }
 
@@ -39,12 +43,15 @@ function ponerMeta(html: string, atributo: string, clave: string, valor: string)
   return html.replace(patron, `<meta ${atributo}="${clave}" content="${escapar(valor)}" />`)
 }
 
-function paginaDe(plantilla: string, idioma: Idioma, indice: number) {
+function paginaDe(plantilla: string, idioma: Idioma, indice: number, sub: number | null = null) {
   const dic = leerDiccionario(idioma)
   const alterno: Idioma = idioma === 'es' ? 'en' : 'es'
-  const camino = `/${idioma}/${SLUGS[idioma][indice]}`
+  const cola = sub === null ? '' : `/${SLUGS_APPS[idioma][sub]}`
+  const camino = `/${idioma}/${SLUGS[idioma][indice]}${cola}`
   const url = `${DOMINIO}${camino}`
-  const titulo = `${dic.videos[`v${indice}`]} \u2014 ${dic.hero.title}`
+  const nombre =
+    sub === null ? dic.videos[`v${indice}`] : dic.apps[sub === 0 ? 'languages' : 'loveAndFriends']
+  const titulo = `${nombre} \u2014 ${dic.hero.title}`
   const descripcion = dic.meta.description
 
   let html = plantilla
@@ -61,17 +68,20 @@ function paginaDe(plantilla: string, idioma: Idioma, indice: number) {
   // hreflang: le dice al buscador que estas dos paginas son la misma en dos idiomas
   const alternas = [
     `<link rel="alternate" hreflang="${idioma}" href="${url}" />`,
-    `<link rel="alternate" hreflang="${alterno}" href="${DOMINIO}/${alterno}/${SLUGS[alterno][indice]}" />`,
-    `<link rel="alternate" hreflang="x-default" href="${DOMINIO}/en/${SLUGS.en[indice]}" />`
+    `<link rel="alternate" hreflang="${alterno}" href="${DOMINIO}/${alterno}/${SLUGS[alterno][indice]}${sub === null ? '' : `/${SLUGS_APPS[alterno][sub]}`}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${DOMINIO}/en/${SLUGS.en[indice]}${sub === null ? '' : `/${SLUGS_APPS.en[sub]}`}" />`
   ].join('\n    ')
 
   return html.replace(/<\/head>/i, `  ${alternas}\n  </head>`)
 }
 
 function sitemapDe() {
-  const urls = IDIOMAS.flatMap((idioma) =>
-    SLUGS[idioma].map((slug: string) => `  <url><loc>${DOMINIO}/${idioma}/${slug}</loc></url>`)
-  )
+  const urls = IDIOMAS.flatMap((idioma) => [
+    ...SLUGS[idioma].map((slug: string) => `  <url><loc>${DOMINIO}/${idioma}/${slug}</loc></url>`),
+    ...SLUGS_APPS[idioma].map(
+      (slug: string) => `  <url><loc>${DOMINIO}/${idioma}/${SLUGS[idioma][APPS]}/${slug}</loc></url>`
+    )
+  ])
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`
 }
 
@@ -92,6 +102,14 @@ function prerenderizar(): Plugin {
           const carpeta = join(salida, idioma, slug)
           mkdirSync(carpeta, { recursive: true })
           writeFileSync(join(carpeta, 'index.html'), paginaDe(plantilla, idioma, indice), 'utf8')
+          generadas++
+        })
+
+        // Las dos apps cuelgan de APPS: /idioma/apps/nombre
+        SLUGS_APPS[idioma].forEach((slug: string, sub: number) => {
+          const carpeta = join(salida, idioma, SLUGS[idioma][APPS], slug)
+          mkdirSync(carpeta, { recursive: true })
+          writeFileSync(join(carpeta, 'index.html'), paginaDe(plantilla, idioma, APPS, sub), 'utf8')
           generadas++
         })
       }

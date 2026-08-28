@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
 import type { SupportedLanguage } from './i18n'
 import i18next from './i18n'
-import { leerRuta, rutaDe } from './rutas'
+import { APPS, leerRuta, rutaDe } from './rutas'
 
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
@@ -14,9 +14,17 @@ const PORTADAS: Record<SupportedLanguage, string[]> = {
   es: Array.from({ length: 12 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-es.webp`)
 }
 
+// Las dos apps llevan su portada por nombre y no por numero: asi no hay que
+// rehacerlas si algun dia cambia la posicion de APPS en la lista
+const PORTADAS_APPS: Record<SupportedLanguage, string[]> = {
+  en: ['/portada-languages-en.webp', '/portada-love-and-friends-en.webp'],
+  es: ['/portada-languages-es.webp', '/portada-love-and-friends-es.webp']
+}
+
 // La portada depende del idioma activo; un idioma inesperado cae al ingles
-function portadaDe(idioma: string, indice: number) {
-  return (PORTADAS[idioma as SupportedLanguage] ?? PORTADAS.en)[indice]
+function portadaDe(idioma: string, indice: number, sub: number | null) {
+  const lang = (PORTADAS[idioma as SupportedLanguage] ? idioma : 'en') as SupportedLanguage
+  return sub === null ? PORTADAS[lang][indice] : PORTADAS_APPS[lang][sub]
 }
 
 // Salvo EMPEZAR, todos los puntos comparten el mismo video de relleno
@@ -53,6 +61,32 @@ const OG_LOCALES: Record<string, string> = {
 const RUTA_INICIAL = leerRuta(window.location.pathname)
 if (RUTA_INICIAL) void i18next.changeLanguage(RUTA_INICIAL.idioma)
 
+// APPS nunca se queda vacio: si no viene app en la direccion, se abre la primera
+const SUB_INICIAL =
+  RUTA_INICIAL === null ? null : RUTA_INICIAL.indice === APPS ? (RUTA_INICIAL.sub ?? 0) : null
+
+// Los dos menus comparten aspecto: se saca aqui para no repetir las clases
+function claseBoton(activo: boolean, creciendo = true) {
+  return [
+    'flex cursor-pointer items-center rounded-sm px-1.5 py-1 text-left font-mono text-[0.66rem] uppercase leading-tight tracking-[0.08em]',
+    // En el submenu solo hay tres botones: conservan el alto de una fila de las
+    // doce y el resto de la columna queda vacio
+    creciendo ? 'flex-1' : 'flex-none basis-[calc(100%/12)]',
+    'transition-colors sm:px-3 sm:py-2 sm:text-[1.05rem] sm:tracking-[0.14em]',
+    'border-l-[3px]',
+    activo
+      ? 'border-accent bg-logo text-crema'
+      : 'border-transparent text-muted hover:border-line hover:text-crema'
+  ].join(' ')
+}
+
+// Submenu de APPS: VOLVER cierra, las otras dos abren su tutorial
+const APPS_MENU = [
+  { clave: 'apps.volver', sub: null as number | null },
+  { clave: 'apps.languages', sub: 0 as number | null },
+  { clave: 'apps.loveAndFriends', sub: 1 as number | null }
+]
+
 function setMeta(selector: string, content: string) {
   const tag = document.head.querySelector<HTMLMetaElement>(selector)
   if (tag) tag.content = content
@@ -67,6 +101,9 @@ export default function App() {
   const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
   const [panelVisible, setPanelVisible] = useState(false)
   const [videoActivo, setVideoActivo] = useState(RUTA_INICIAL?.indice ?? 0)
+  const [appActiva, setAppActiva] = useState<number | null>(SUB_INICIAL)
+  // El submenu se abre al entrar en APPS y tambien al llegar por una ruta anidada
+  const [enApps, setEnApps] = useState(RUTA_INICIAL?.indice === APPS)
   const [pantallaCompleta, setPantallaCompleta] = useState(false)
   const [cajaUtil, setCajaUtil] = useState<{ izq: number; ancho: number } | null>(null)
   const menu = useRef<HTMLElement>(null)
@@ -115,7 +152,7 @@ export default function App() {
   // devuelve a su estado inicial y la portada vuelve a pintarse
   useEffect(() => {
     video.current?.load()
-  }, [videoActivo])
+  }, [videoActivo, appActiva])
 
   // Navegadores con ahorro de datos ignoran el preload y no disparan onLoadedData.
   // Se atiende a varios eventos y, si ninguno llega, se muestra igualmente
@@ -131,7 +168,7 @@ export default function App() {
       eventos.forEach((e) => v.removeEventListener(e, listo))
       window.clearTimeout(respaldo)
     }
-  }, [videoActivo])
+  }, [videoActivo, appActiva])
 
   // Mantiene sincronizados el reloj y la barra con la reproduccion
   useEffect(() => {
@@ -287,8 +324,9 @@ export default function App() {
     return () => document.removeEventListener('fullscreenchange', alCambiar)
   }, [])
 
-  const mostrarVideo = (indice: number) => {
+  const mostrarVideo = (indice: number, sub: number | null = null) => {
     setVideoActivo(indice)
+    setAppActiva(sub)
     setEnPausa(true)
     setTiempo(0)
     setDuracion(0)
@@ -299,8 +337,24 @@ export default function App() {
 
   // Pulsar en el menu anade una entrada al historial: el boton atras funciona
   const elegirVideo = (indice: number) => {
-    mostrarVideo(indice)
-    window.history.pushState(null, '', rutaDe(language, indice))
+    // APPS abre el submenu y muestra ya la primera app, para no dejar el hueco vacio
+    const sub = indice === APPS ? 0 : null
+    mostrarVideo(indice, sub)
+    setEnApps(indice === APPS)
+    window.history.pushState(null, '', rutaDe(language, indice, sub))
+  }
+
+  const elegirApp = (sub: number) => {
+    mostrarVideo(APPS, sub)
+    window.history.pushState(null, '', rutaDe(language, APPS, sub))
+  }
+
+  // VOLVER cierra el submenu y baja al primer punto de la lista: APPS es solo
+  // un enlace, no debe quedarse marcado ni dejar el hueco del video vacio
+  const salirDeApps = () => {
+    setEnApps(false)
+    mostrarVideo(0)
+    window.history.pushState(null, '', rutaDe(language, 0))
   }
 
   // Atras y adelante del navegador
@@ -308,12 +362,16 @@ export default function App() {
     const alNavegar = () => {
       const ruta = leerRuta(window.location.pathname)
       if (!ruta) return
-      mostrarVideo(ruta.indice)
+      mostrarVideo(ruta.indice, ruta.indice === APPS ? (ruta.sub ?? 0) : ruta.sub)
+      setEnApps(ruta.indice === APPS)
       if (ruta.idioma !== language) void i18n.changeLanguage(ruta.idioma)
     }
     window.addEventListener('popstate', alNavegar)
     return () => window.removeEventListener('popstate', alNavegar)
   })
+
+  // APPS es solo un enlace al submenu: no tiene portada ni video propios
+  const sinMedia = videoActivo === APPS && appActiva === null
 
   const irA = (segundos: number) => {
     const v = video.current
@@ -345,12 +403,16 @@ export default function App() {
   // El idioma y el video activos deben reflejarse en el documento y en la
   // direccion. Tambien cubre la entrada por la raiz, que no tiene camino valido
   useEffect(() => {
-    const camino = rutaDe(language, videoActivo)
+    const camino = rutaDe(language, videoActivo, appActiva)
     if (window.location.pathname !== camino) {
       window.history.replaceState(null, '', camino)
     }
 
-    const title = `${t(`videos.v${videoActivo}`)} \u2014 ${t('hero.title')}`
+    const nombre =
+      appActiva === null
+        ? t(`videos.v${videoActivo}`)
+        : t(appActiva === 0 ? 'apps.languages' : 'apps.loveAndFriends')
+    const title = `${nombre} \u2014 ${t('hero.title')}`
     const description = t('meta.description')
     const url = `https://ap3c.app${camino}`
 
@@ -364,7 +426,7 @@ export default function App() {
 
     const canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
     if (canonical) canonical.href = url
-  }, [language, videoActivo, t])
+  }, [language, videoActivo, appActiva, t])
 
   return (
     <div className="relative min-h-dvh overflow-hidden">
@@ -382,27 +444,37 @@ export default function App() {
           pantallaCompleta ? 'hidden' : ''
         ].join(' ')}
       >
-        {VIDEOS.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => elegirVideo(i)}
-            aria-current={i === videoActivo ? 'true' : undefined}
-            className={[
-              'flex flex-1 cursor-pointer items-center rounded-sm px-1.5 py-1 text-left font-mono text-[0.66rem] uppercase leading-tight tracking-[0.08em]',
-              'transition-colors sm:px-3 sm:py-2 sm:text-[1.05rem] sm:tracking-[0.14em]',
-              'border-l-[3px]',
-              i === videoActivo
-                ? 'border-accent bg-logo text-crema'
-                : 'border-transparent text-muted hover:border-line hover:text-crema'
-            ].join(' ')}
-          >
-            {/* Solo el primer punto parte la palabra: es la unica que no cabe entera */}
-            <span className={i === 0 ? 'min-w-0 hyphens-auto break-words' : undefined}>
-              {t(`videos.v${i}`)}
-            </span>
-          </button>
-        ))}
+        {enApps
+          ? APPS_MENU.map((entrada, i) => {
+              const activo = entrada.sub !== null && entrada.sub === appActiva
+              return (
+                <button
+                  key={entrada.clave}
+                  type="button"
+                  onClick={() => (entrada.sub === null ? salirDeApps() : elegirApp(entrada.sub))}
+                  aria-current={activo ? 'true' : undefined}
+                  className={claseBoton(activo, false)}
+                >
+                  <span className={i === 0 ? undefined : 'min-w-0 hyphens-auto break-words'}>
+                    {t(entrada.clave)}
+                  </span>
+                </button>
+              )
+            })
+          : VIDEOS.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => elegirVideo(i)}
+                aria-current={i === videoActivo ? 'true' : undefined}
+                className={claseBoton(i === videoActivo)}
+              >
+                {/* Solo el primer punto parte la palabra: es la unica que no cabe entera */}
+                <span className={i === 0 ? 'min-w-0 hyphens-auto break-words' : undefined}>
+                  {t(`videos.v${i}`)}
+                </span>
+              </button>
+            ))}
       </nav>
 
       <div
@@ -413,10 +485,11 @@ export default function App() {
             : 'absolute bottom-[48px] left-[70px] right-0 top-[58px] m-auto aspect-[720/1606] h-[min(calc(100dvh-106px),calc((100vw-70px)*2.2306))] sm:bottom-0 sm:left-[220px] sm:top-0 sm:mx-auto sm:my-0 sm:h-dvh'
         }
       >
+        {!sinMedia && (
         <video
           ref={video}
-          src={VIDEOS[videoActivo]}
-          poster={portadaDe(language, videoActivo)}
+          src={appActiva === null ? VIDEOS[videoActivo] : EN_OBRAS}
+          poster={portadaDe(language, videoActivo, appActiva)}
           muted
           playsInline
           preload="metadata"
@@ -430,8 +503,9 @@ export default function App() {
           }}
           className="h-full w-full object-contain"
         />
+        )}
 
-        {!animacionLista && (
+        {!sinMedia && !animacionLista && (
           <div
             role="status"
             aria-live="polite"
@@ -446,6 +520,7 @@ export default function App() {
             </span>
           </div>
         )}
+        {!sinMedia && (
         <div
             ref={panel}
             onPointerDown={empezarArrastre}
@@ -577,6 +652,7 @@ export default function App() {
               </span>
             </div>
         </div>
+        )}
       </div>
 
       <img
