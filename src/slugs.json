@@ -1,0 +1,28 @@
+{
+  "en": [
+    "start",
+    "change-language",
+    "upload-an-image",
+    "change-profile-picture",
+    "change-nickname",
+    "location",
+    "sign-out",
+    "delete-account",
+    "warnings",
+    "apps",
+    "contact"
+  ],
+  "es": [
+    "empezar",
+    "cambiar-idioma",
+    "subir-una-imagen",
+    "cambiar-imagen-de-perfil",
+    "cambiar-nickname",
+    "ubicacion",
+    "cerrar-sesion",
+    "eliminar-cuenta",
+    "warnings",
+    "apps",
+    "contacto"
+  ]
+}

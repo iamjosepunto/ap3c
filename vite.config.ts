@@ -5,7 +5,6 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { SLUGS } from './src/rutas'
 
 const DOMINIO = 'https://ap3c.app'
 const IDIOMAS = ['en', 'es'] as const
@@ -13,8 +12,15 @@ const OG_LOCALES = { en: 'en_US', es: 'es_ES' } as const
 
 type Idioma = (typeof IDIOMAS)[number]
 
+// Se lee el JSON en vez de importar src/rutas.ts: un import relativo sin
+// extension rompe tsc cuando moduleResolution es node16 o nodenext
+const RAIZ = process.cwd()
+const SLUGS = JSON.parse(
+  readFileSync(join(RAIZ, 'src', 'slugs.json'), 'utf8')
+) as Record<Idioma, string[]>
+
 function leerDiccionario(idioma: Idioma) {
-  const crudo = readFileSync(join(__dirname, 'src', 'locales', `${idioma}.json`), 'utf8')
+  const crudo = readFileSync(join(RAIZ, 'src', 'locales', `${idioma}.json`), 'utf8')
   return JSON.parse(crudo) as {
     meta: { title: string; description: string }
     hero: { title: string }
@@ -64,7 +70,7 @@ function paginaDe(plantilla: string, idioma: Idioma, indice: number) {
 
 function sitemapDe() {
   const urls = IDIOMAS.flatMap((idioma) =>
-    SLUGS[idioma].map((slug) => `  <url><loc>${DOMINIO}/${idioma}/${slug}</loc></url>`)
+    SLUGS[idioma].map((slug: string) => `  <url><loc>${DOMINIO}/${idioma}/${slug}</loc></url>`)
   )
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`
 }
@@ -76,13 +82,13 @@ function prerenderizar(): Plugin {
     name: 'ap3c-prerender',
     apply: 'build',
     closeBundle() {
-      const salida = join(__dirname, 'dist')
+      const salida = join(RAIZ, 'dist')
       const raiz = join(salida, 'index.html')
       const plantilla = readFileSync(raiz, 'utf8')
       let generadas = 0
 
       for (const idioma of IDIOMAS) {
-        SLUGS[idioma].forEach((slug, indice) => {
+        SLUGS[idioma].forEach((slug: string, indice: number) => {
           const carpeta = join(salida, idioma, slug)
           mkdirSync(carpeta, { recursive: true })
           writeFileSync(join(carpeta, 'index.html'), paginaDe(plantilla, idioma, indice), 'utf8')

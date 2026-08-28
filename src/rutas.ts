@@ -1,40 +1,14 @@
 ﻿// UBICACION: src/rutas.ts
 import type { SupportedLanguage } from './i18n'
+import slugs from './slugs.json'
 
-// Solo se importa el tipo, nunca i18next: asi vite.config.ts puede leer este
-// archivo durante la compilacion sin arrastrar la libreria entera
 const IDIOMAS: readonly SupportedLanguage[] = ['en', 'es']
 
-// Los slugs son fijos a proposito y no se derivan de los diccionarios: si algun
-// dia cambia el texto de un menu, las direcciones ya compartidas siguen valiendo
-export const SLUGS: Record<SupportedLanguage, readonly string[]> = {
-  en: [
-    'start',
-    'change-language',
-    'upload-an-image',
-    'change-profile-picture',
-    'change-nickname',
-    'location',
-    'sign-out',
-    'delete-account',
-    'warnings',
-    'apps',
-    'contact'
-  ],
-  es: [
-    'empezar',
-    'cambiar-idioma',
-    'subir-una-imagen',
-    'cambiar-imagen-de-perfil',
-    'cambiar-nickname',
-    'ubicacion',
-    'cerrar-sesion',
-    'eliminar-cuenta',
-    'warnings',
-    'apps',
-    'contacto'
-  ]
-}
+// La tabla vive en slugs.json para que vite.config.ts pueda leerla al compilar
+// sin importar este archivo. Los slugs son fijos a proposito y no se derivan de
+// los diccionarios: si cambia el texto de un menu, los enlaces ya compartidos
+// siguen valiendo
+export const SLUGS: Record<SupportedLanguage, readonly string[]> = slugs
 
 export function esIdiomaValido(valor: string): valor is SupportedLanguage {
   return (IDIOMAS as readonly string[]).includes(valor)
