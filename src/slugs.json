@@ -1,5 +1,6 @@
 {
   "en": [
+    "requirements",
     "start",
     "change-language",
     "upload-an-image",
@@ -13,6 +14,7 @@
     "contact"
   ],
   "es": [
+    "requisitos",
     "empezar",
     "cambiar-idioma",
     "subir-una-imagen",

@@ -10,8 +10,8 @@ import { leerRuta, rutaDe } from './rutas'
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
 const PORTADAS: Record<SupportedLanguage, string[]> = {
-  en: Array.from({ length: 11 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-en.webp`),
-  es: Array.from({ length: 11 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-es.webp`)
+  en: Array.from({ length: 12 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-en.webp`),
+  es: Array.from({ length: 12 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-es.webp`)
 }
 
 // La portada depende del idioma activo; un idioma inesperado cae al ingles
@@ -19,18 +19,22 @@ function portadaDe(idioma: string, indice: number) {
   return (PORTADAS[idioma as SupportedLanguage] ?? PORTADAS.en)[indice]
 }
 
+// Salvo EMPEZAR, todos los puntos comparten el mismo video de relleno
+const EN_OBRAS = '/video-construccion.mp4'
+
 const VIDEOS = [
-  '/Prueba.mp4',
-  '/video-01.mp4',
-  '/video-02.mp4',
-  '/video-03.mp4',
-  '/video-04.mp4',
-  '/video-05.mp4',
-  '/video-06.mp4',
-  '/video-07.mp4',
-  '/video-08.mp4',
-  '/video-09.mp4',
-  '/video-10.mp4'
+  EN_OBRAS,      // 0  Requisitos
+  '/Prueba.mp4', // 1  Empezar
+  EN_OBRAS,      // 2  Cambiar idioma
+  EN_OBRAS,      // 3  Subir una imagen
+  EN_OBRAS,      // 4  Cambiar imagen de perfil
+  EN_OBRAS,      // 5  Cambiar nickname
+  EN_OBRAS,      // 6  Ubicacion
+  EN_OBRAS,      // 7  Cerrar sesion
+  EN_OBRAS,      // 8  Eliminar cuenta
+  EN_OBRAS,      // 9  Warnings
+  EN_OBRAS,      // 10 Apps
+  EN_OBRAS       // 11 Contacto
 ]
 
 function reloj(segundos: number) {
@@ -372,7 +376,7 @@ export default function App() {
       >
         {VIDEOS.map((_, i) => (
           <button
-            key={VIDEOS[i]}
+            key={i}
             type="button"
             onClick={() => elegirVideo(i)}
             aria-current={i === videoActivo ? 'true' : undefined}
@@ -385,7 +389,7 @@ export default function App() {
                 : 'border-transparent text-muted hover:border-line hover:text-crema'
             ].join(' ')}
           >
-            {t(`videos.v${i}`)}
+            <span className="min-w-0 hyphens-auto break-words">{t(`videos.v${i}`)}</span>
           </button>
         ))}
       </nav>

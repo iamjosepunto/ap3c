@@ -32,16 +32,17 @@
     "exitFullscreen": "Salir de pantalla completa"
   },
   "videos": {
-    "v0": "Empezar",
-    "v1": "Cambiar idioma",
-    "v2": "Subir una imagen",
-    "v3": "Cambiar imagen de perfil",
-    "v4": "Cambiar nickname",
-    "v5": "Ubicación",
-    "v6": "Cerrar sesión",
-    "v7": "Eliminar cuenta",
-    "v8": "Warnings",
-    "v9": "Apps",
-    "v10": "Contacto"
+    "v0": "Requisitos",
+    "v1": "Empezar",
+    "v2": "Cambiar idioma",
+    "v3": "Subir una imagen",
+    "v4": "Cambiar imagen de perfil",
+    "v5": "Cambiar nickname",
+    "v6": "Ubicación",
+    "v7": "Cerrar sesión",
+    "v8": "Eliminar cuenta",
+    "v9": "Warnings",
+    "v10": "Apps",
+    "v11": "Contacto"
   }
 }

@@ -32,16 +32,17 @@
     "exitFullscreen": "Exit fullscreen"
   },
   "videos": {
-    "v0": "Start",
-    "v1": "Change language",
-    "v2": "Upload an image",
-    "v3": "Change profile picture",
-    "v4": "Change nickname",
-    "v5": "Location",
-    "v6": "Sign out",
-    "v7": "Delete account",
-    "v8": "Warnings",
-    "v9": "Apps",
-    "v10": "Contact"
+    "v0": "Requirements",
+    "v1": "Start",
+    "v2": "Change language",
+    "v3": "Upload an image",
+    "v4": "Change profile picture",
+    "v5": "Change nickname",
+    "v6": "Location",
+    "v7": "Sign out",
+    "v8": "Delete account",
+    "v9": "Warnings",
+    "v10": "Apps",
+    "v11": "Contact"
   }
 }
