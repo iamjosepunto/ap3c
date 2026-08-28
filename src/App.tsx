@@ -389,7 +389,10 @@ export default function App() {
                 : 'border-transparent text-muted hover:border-line hover:text-crema'
             ].join(' ')}
           >
-            <span className="min-w-0 hyphens-auto break-words">{t(`videos.v${i}`)}</span>
+            {/* Solo el primer punto parte la palabra: es la unica que no cabe entera */}
+            <span className={i === 0 ? 'min-w-0 hyphens-auto break-words' : undefined}>
+              {t(`videos.v${i}`)}
+            </span>
           </button>
         ))}
       </nav>
