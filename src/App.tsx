@@ -10,15 +10,16 @@ import { APPS, leerRuta, rutaDe } from './rutas'
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
 const PORTADAS: Record<SupportedLanguage, string[]> = {
-  en: Array.from({ length: 12 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-en.webp`),
-  es: Array.from({ length: 12 }, (_, i) => `/portada-${String(i).padStart(2, '0')}-es.webp`)
+  // El numero del archivo es el del tutorial, que empieza en 1, no en 0
+  en: Array.from({ length: 12 }, (_, i) => `/portada-${String(i + 1).padStart(2, '0')}-en.webp`),
+  es: Array.from({ length: 12 }, (_, i) => `/portada-${String(i + 1).padStart(2, '0')}-es.webp`)
 }
 
 // Las dos apps llevan su portada por nombre y no por numero: asi no hay que
 // rehacerlas si algun dia cambia la posicion de APPS en la lista
 const PORTADAS_APPS: Record<SupportedLanguage, string[]> = {
-  en: ['/portada-languages-en.webp', '/portada-love-and-friends-en.webp'],
-  es: ['/portada-languages-es.webp', '/portada-love-and-friends-es.webp']
+  en: ['/portada-11-1-en.webp', '/portada-11-2-en.webp'],
+  es: ['/portada-11-1-es.webp', '/portada-11-2-es.webp']
 }
 
 // La portada depende del idioma activo; un idioma inesperado cae al ingles
@@ -456,7 +457,7 @@ export default function App() {
                   className={claseBoton(activo, false)}
                 >
                   <span className={i === 0 ? undefined : 'min-w-0 hyphens-auto break-words'}>
-                    {t(entrada.clave)}
+                    {entrada.sub === null ? `<< ${t(entrada.clave)}` : t(entrada.clave)}
                   </span>
                 </button>
               )
@@ -470,8 +471,18 @@ export default function App() {
                 className={claseBoton(i === videoActivo)}
               >
                 {/* Solo el primer punto parte la palabra: es la unica que no cabe entera */}
-                <span className={i === 0 ? 'min-w-0 hyphens-auto break-words' : undefined}>
-                  {t(`videos.v${i}`)}
+                <span
+                  className={
+                    i === 0
+                      ? 'min-w-0 hyphens-auto break-words'
+                      : // APPs lleva la ese minuscula a proposito, asi que este
+                        // boton no puede heredar el uppercase de los demas
+                        i === APPS
+                        ? 'normal-case'
+                        : undefined
+                  }
+                >
+                  {i === APPS ? 'APPs >>' : t(`videos.v${i}`)}
                 </span>
               </button>
             ))}
