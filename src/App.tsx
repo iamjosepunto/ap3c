@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
 import type { SupportedLanguage } from './i18n'
 import i18next from './i18n'
-import { APPS, leerRuta, rutaDe } from './rutas'
+import { APPS, SLUGS_APPS, leerRuta, rutaDe } from './rutas'
 
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
@@ -81,11 +81,11 @@ function claseBoton(activo: boolean, creciendo = true) {
   ].join(' ')
 }
 
-// Submenu de APPS: VOLVER cierra, las otras dos abren su tutorial
+// Submenu de APPS: VOLVER cierra, las demas abren su tutorial. El orden y las
+// claves salen de slugs.json, asi que reordenarlas no obliga a tocar el codigo
 const APPS_MENU = [
   { clave: 'apps.volver', sub: null as number | null },
-  { clave: 'apps.languages', sub: 0 as number | null },
-  { clave: 'apps.loveAndFriends', sub: 1 as number | null }
+  ...SLUGS_APPS.en.map((slug, i) => ({ clave: `apps.${slug}`, sub: i as number | null }))
 ]
 
 function setMeta(selector: string, content: string) {
@@ -410,9 +410,7 @@ export default function App() {
     }
 
     const nombre =
-      appActiva === null
-        ? t(`videos.v${videoActivo}`)
-        : t(appActiva === 0 ? 'apps.languages' : 'apps.loveAndFriends')
+      appActiva === null ? t(`videos.v${videoActivo}`) : t(`apps.${SLUGS_APPS.en[appActiva]}`)
     const title = `${nombre} \u2014 ${t('hero.title')}`
     const description = t('meta.description')
     const url = `https://ap3c.app${camino}`

@@ -49,8 +49,8 @@ function paginaDe(plantilla: string, idioma: Idioma, indice: number, sub: number
   const cola = sub === null ? '' : `/${SLUGS_APPS[idioma][sub]}`
   const camino = `/${idioma}/${SLUGS[idioma][indice]}${cola}`
   const url = `${DOMINIO}${camino}`
-  const nombre =
-    sub === null ? dic.videos[`v${indice}`] : dic.apps[sub === 0 ? 'languages' : 'loveAndFriends']
+  // La clave del diccionario es el propio slug, asi el orden lo manda slugs.json
+  const nombre = sub === null ? dic.videos[`v${indice}`] : dic.apps[SLUGS_APPS[idioma][sub]]
   const titulo = `${nombre} \u2014 ${dic.hero.title}`
   const descripcion = dic.meta.description
 

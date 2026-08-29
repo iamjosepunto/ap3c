@@ -41,13 +41,13 @@
     "v6": "Cambiar nickname",
     "v7": "Ubicación",
     "v8": "Cerrar sesión",
-    "v9": "Eliminar cuenta",
-    "v10": "Warnings",
-    "v11": "Contacto"
+    "v9": "Warnings",
+    "v10": "Contacto",
+    "v11": "Eliminar cuenta"
   },
   "apps": {
     "volver": "Volver",
-    "languages": "Languages",
-    "loveAndFriends": "Love & Friends"
+    "love-and-friends": "Love & Friends",
+    "languages": "Languages"
   }
 }

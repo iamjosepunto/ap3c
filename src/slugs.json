@@ -10,9 +10,9 @@
       "change-nickname",
       "location",
       "sign-out",
-      "delete-account",
       "warnings",
-      "contact"
+      "contact",
+      "delete-account"
     ],
     "es": [
       "requisitos",
@@ -24,19 +24,19 @@
       "cambiar-nickname",
       "ubicacion",
       "cerrar-sesion",
-      "eliminar-cuenta",
       "warnings",
-      "contacto"
+      "contacto",
+      "eliminar-cuenta"
     ]
   },
   "apps": {
     "en": [
-      "languages",
-      "love-and-friends"
+      "love-and-friends",
+      "languages"
     ],
     "es": [
-      "languages",
-      "love-and-friends"
+      "love-and-friends",
+      "languages"
     ]
   }
 }
