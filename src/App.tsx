@@ -18,8 +18,8 @@ const PORTADAS: Record<SupportedLanguage, string[]> = {
 // Las dos apps llevan su portada por nombre y no por numero: asi no hay que
 // rehacerlas si algun dia cambia la posicion de APPS en la lista
 const PORTADAS_APPS: Record<SupportedLanguage, string[]> = {
-  en: ['/portada-11-1-en.webp', '/portada-11-2-en.webp'],
-  es: ['/portada-11-1-es.webp', '/portada-11-2-es.webp']
+  en: ['/portada-03-1-en.webp', '/portada-03-2-en.webp'],
+  es: ['/portada-03-1-es.webp', '/portada-03-2-es.webp']
 }
 
 // La portada depende del idioma activo; un idioma inesperado cae al ingles
@@ -34,15 +34,15 @@ const EN_OBRAS = '/video-construccion.mp4'
 const VIDEOS = [
   EN_OBRAS,      // 0  Requisitos
   '/Prueba.mp4', // 1  Empezar
-  EN_OBRAS,      // 2  Cambiar idioma
-  EN_OBRAS,      // 3  Subir una imagen
-  EN_OBRAS,      // 4  Cambiar imagen de perfil
-  EN_OBRAS,      // 5  Cambiar nickname
-  EN_OBRAS,      // 6  Ubicacion
-  EN_OBRAS,      // 7  Cerrar sesion
-  EN_OBRAS,      // 8  Eliminar cuenta
-  EN_OBRAS,      // 9  Warnings
-  EN_OBRAS,      // 10 Apps
+  EN_OBRAS,      // 2  Apps (solo enlace: no se llega a usar)
+  EN_OBRAS,      // 3  Cambiar idioma
+  EN_OBRAS,      // 4  Subir una imagen
+  EN_OBRAS,      // 5  Cambiar imagen de perfil
+  EN_OBRAS,      // 6  Cambiar nickname
+  EN_OBRAS,      // 7  Ubicacion
+  EN_OBRAS,      // 8  Cerrar sesion
+  EN_OBRAS,      // 9  Eliminar cuenta
+  EN_OBRAS,      // 10 Warnings
   EN_OBRAS       // 11 Contacto
 ]
 

@@ -3,6 +3,7 @@
     "en": [
       "requirements",
       "start",
+      "apps",
       "change-language",
       "upload-an-image",
       "change-profile-picture",
@@ -11,12 +12,12 @@
       "sign-out",
       "delete-account",
       "warnings",
-      "apps",
       "contact"
     ],
     "es": [
       "requisitos",
       "empezar",
+      "apps",
       "cambiar-idioma",
       "subir-una-imagen",
       "cambiar-imagen-de-perfil",
@@ -25,7 +26,6 @@
       "cerrar-sesion",
       "eliminar-cuenta",
       "warnings",
-      "apps",
       "contacto"
     ]
   },
