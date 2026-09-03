@@ -31,6 +31,10 @@ function portadaDe(idioma: string, indice: number, sub: number | null) {
 // Salvo EMPEZAR, todos los puntos comparten el mismo video de relleno
 const EN_OBRAS = '/video-construccion.mp4'
 
+// Aire entre el borde derecho del video y lo que se apoya en el: el pie y la
+// pildora de estado
+const SEPARACION = 5
+
 const VIDEOS = [
   EN_OBRAS,      // 0  Requisitos
   '/Prueba.mp4', // 1  Empezar
@@ -109,10 +113,12 @@ export default function App() {
   const [cajaUtil, setCajaUtil] = useState<{ izq: number; ancho: number } | null>(null)
   const menu = useRef<HTMLElement>(null)
   const [borde, setBorde] = useState({ izq: 0, der: 0, ancho: 0 })
+  const [altoPie, setAltoPie] = useState(0)
   const [esEscritorio, setEsEscritorio] = useState(false)
   const ocultador = useRef<number | null>(null)
   const zonaVideo = useRef<HTMLDivElement>(null)
   const panel = useRef<HTMLDivElement>(null)
+  const pie = useRef<HTMLElement>(null)
   const arrastre = useRef<{ desdeY: number; desdePos: number } | null>(null)
   const logoIntro = useRef<HTMLImageElement>(null)
   const logoCabecera = useRef<HTMLImageElement>(null)
@@ -400,6 +406,18 @@ export default function App() {
     v.currentTime = 0
     setEnPausa(true)
   }
+
+  // El pie se coloca a la derecha del video y la pildora justo encima: su alto
+  // se mide, no se estima, para que no se solapen al cambiar de idioma o tamano
+  useEffect(() => {
+    const e = pie.current
+    if (!e) return
+    const medir = () => setAltoPie(e.offsetHeight)
+    const observador = new ResizeObserver(medir)
+    observador.observe(e)
+    medir()
+    return () => observador.disconnect()
+  }, [])
 
   // El idioma y el video activos deben reflejarse en el documento y en la
   // direccion. Tambien cubre la entrada por la raiz, que no tiene camino valido
@@ -737,9 +755,12 @@ export default function App() {
       </header>
 
       <footer
+        ref={pie}
         style={
-          esEscritorio && !pantallaCompleta ? { left: borde.izq - 16, maxWidth: borde.ancho } : undefined
-        } className="absolute bottom-1 left-2 z-20 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:justify-end sm:text-right sm:text-xs">
+          esEscritorio && !pantallaCompleta
+            ? { left: borde.der + SEPARACION, maxWidth: borde.ancho }
+            : undefined
+        } className="absolute bottom-1 left-2 z-20 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:justify-start sm:text-left sm:text-xs">
         <span className="flex flex-none items-center gap-1.5 whitespace-nowrap">
           © {new Date().getFullYear()}
           <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-3" />
@@ -749,7 +770,14 @@ export default function App() {
         </span>
       </footer>
 
-      <p style={esEscritorio && !pantallaCompleta ? { left: borde.der } : undefined} className="absolute bottom-1 right-1 z-10 rounded-full sm:right-auto border border-line bg-surface/60 px-3 py-1 text-center font-mono text-[0.6rem] uppercase leading-tight tracking-[0.16em] text-muted sm:bottom-2 sm:right-0 sm:px-4 sm:py-[10px] sm:text-xs">
+      <p
+        style={
+          esEscritorio && !pantallaCompleta
+            ? { left: borde.der + SEPARACION, bottom: altoPie + 16 }
+            : undefined
+        }
+        className="absolute bottom-1 right-1 z-10 rounded-full sm:right-auto border border-line bg-surface/60 px-3 py-1 text-center font-mono text-[0.6rem] uppercase leading-tight tracking-[0.16em] text-muted sm:right-0 sm:px-4 sm:py-[10px] sm:text-xs"
+      >
         {t('hero.status')
           .split('·')
           .map((linea) => (
