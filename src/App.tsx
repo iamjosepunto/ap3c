@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './components/LanguageSwitcher'
 import type { SupportedLanguage } from './i18n'
 import i18next from './i18n'
-import { APPS, SLUGS_APPS, leerRuta, rutaDe } from './rutas'
+import { APPS, SLUGS_APPS, esIdiomaValido, leerRuta, rutaDe } from './rutas'
 
 const VELOCIDADES = [1, 1.5, 2, 3, 4]
 
@@ -35,20 +35,26 @@ const EN_OBRAS = '/video-construccion.mp4'
 // pildora de estado
 const SEPARACION = 5
 
-const VIDEOS = [
-  EN_OBRAS,      // 0  Requisitos
-  '/Prueba.mp4', // 1  Empezar
-  EN_OBRAS,      // 2  Apps (solo enlace: no se llega a usar)
-  EN_OBRAS,      // 3  Cambiar idioma
-  EN_OBRAS,      // 4  Subir una imagen
-  EN_OBRAS,      // 5  Cambiar imagen de perfil
-  EN_OBRAS,      // 6  Cambiar nickname
-  EN_OBRAS,      // 7  Ubicacion
-  EN_OBRAS,      // 8  Cerrar sesion
-  EN_OBRAS,      // 9  Eliminar cuenta
-  EN_OBRAS,      // 10 Warnings
-  EN_OBRAS       // 11 Contacto
-]
+// Tutoriales ya grabados, por numero de tutorial. Cada uno con su archivo por
+// idioma; los que faltan usan el video de construccion. Anadir uno nuevo es
+// anadir una linea aqui
+const GRABADOS: Record<number, Record<SupportedLanguage, string>> = {
+  1: {
+    en: '/Tutorial_1_Requisitos_EN_reducido.mp4',
+    es: '/Tutorial_1_Requisitos_ES_reducido.mp4'
+  },
+  // El 2, Empezar, sigue con el video provisional, que no tiene version por idioma
+  2: { en: '/Prueba.mp4', es: '/Prueba.mp4' }
+}
+
+// El video depende del idioma y del punto activo; dentro de APPS siempre es el
+// de construccion, porque las dos apps aun no tienen tutorial propio
+function videoDe(idioma: string, indice: number, sub: number | null) {
+  if (sub !== null) return EN_OBRAS
+  const grabado = GRABADOS[indice + 1]
+  if (!grabado) return EN_OBRAS
+  return grabado[esIdiomaValido(idioma) ? idioma : 'en']
+}
 
 function reloj(segundos: number) {
   const m = Math.floor(segundos / 60)
@@ -153,13 +159,18 @@ export default function App() {
     )
   }, [intro])
 
-  // Los puntos en obras comparten archivo, asi que al saltar entre ellos el src
-  // no cambia: el navegador no recarga y el <video> conserva el fotograma ya
-  // decodificado, con lo que la portada nueva no llegaria a verse. load() lo
-  // devuelve a su estado inicial y la portada vuelve a pintarse
+  // Se reinicia el reproductor cada vez que cambia el archivo, sea por cambio de
+  // punto o de idioma. Los puntos en obras comparten archivo, asi que sin load()
+  // el <video> conservaria el fotograma ya decodificado y no se veria la portada
+  // nueva. Y al cambiar de idioma el navegador recarga parado, asi que los
+  // botones tienen que volver a pausa en vez de seguir mostrando la marcha
   useEffect(() => {
     video.current?.load()
-  }, [videoActivo, appActiva])
+    setEnPausa(true)
+    setTiempo(0)
+    setDuracion(0)
+    setAnimacionLista(false)
+  }, [videoActivo, appActiva, language])
 
   // Navegadores con ahorro de datos ignoran el preload y no disparan onLoadedData.
   // Se atiende a varios eventos y, si ninguno llega, se muestra igualmente
@@ -478,7 +489,7 @@ export default function App() {
                 </button>
               )
             })
-          : VIDEOS.map((_, i) => (
+          : PORTADAS.en.map((_, i) => (
               <button
                 key={i}
                 type="button"
@@ -515,7 +526,7 @@ export default function App() {
         {!sinMedia && (
         <video
           ref={video}
-          src={appActiva === null ? VIDEOS[videoActivo] : EN_OBRAS}
+          src={videoDe(language, videoActivo, appActiva)}
           poster={portadaDe(language, videoActivo, appActiva)}
           muted
           playsInline
