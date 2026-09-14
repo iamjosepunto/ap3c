@@ -478,7 +478,7 @@ export default function App() {
         aria-label="Videos"
         style={esEscritorio && !pantallaCompleta ? { left: borde.izq } : undefined}
         className={[
-          'absolute bottom-[44px] left-0 top-[66px] z-10 flex w-[70px] flex-col sm:bottom-[60px] sm:top-[190px] sm:w-fit sm:pl-3 sm:pr-1',
+          'absolute bottom-[44px] left-0 top-[66px] z-10 flex w-[70px] flex-col sm:bottom-[75px] sm:top-[175px] sm:w-fit sm:pl-3 sm:pr-1',
           pantallaCompleta ? 'hidden' : ''
         ].join(' ')}
       >
