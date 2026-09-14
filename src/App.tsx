@@ -35,6 +35,12 @@ const EN_OBRAS = '/video-construccion.mp4'
 // pildora de estado
 const SEPARACION = 5
 
+// En escritorio el <nav> lleva 12 px de relleno izquierdo, asi que los botones
+// empiezan ahi y no en el borde del menu. El logo y el eslogan de cabecera se
+// desplazan lo mismo para alinearse con el recuadro del boton. Medido en
+// pantalla: menu en 143, boton en 155
+const SANGRIA_CABECERA = 12
+
 // Tutoriales ya grabados, por numero de tutorial. Cada uno con su archivo por
 // idioma; los que faltan usan el video de construccion. Anadir uno nuevo es
 // anadir una linea aqui
@@ -77,17 +83,21 @@ const SUB_INICIAL =
   RUTA_INICIAL === null ? null : RUTA_INICIAL.indice === APPS ? (RUTA_INICIAL.sub ?? 0) : null
 
 // Los dos menus comparten aspecto: se saca aqui para no repetir las clases
-function claseBoton(activo: boolean, creciendo = true) {
+function claseBoton(activo: boolean, creciendo = true, ultimo = false) {
   return [
     'flex cursor-pointer items-center rounded-sm px-1.5 py-1 text-left font-mono text-[0.66rem] uppercase leading-tight tracking-[0.08em]',
     // En el submenu solo hay tres botones: conservan el alto de una fila de las
     // doce y el resto de la columna queda vacio
     creciendo ? 'flex-1' : 'flex-none basis-[calc(100%/12)]',
     'transition-colors sm:px-3 sm:py-2 sm:text-[1.05rem] sm:tracking-[0.14em]',
-    'border-l-[3px]',
+    // Solo linea superior: la inferior de cada boton y la superior del siguiente
+    // se sumarian y darian 2 px entre botones y 1 px en los extremos. El ultimo
+    // cierra la lista por abajo
+    'border-l-[3px] border-t border-t-crema',
+    ultimo ? 'border-b border-b-crema' : '',
     activo
-      ? 'border-accent bg-logo text-crema'
-      : 'border-transparent text-muted hover:border-line hover:text-crema'
+      ? 'border-l-accent bg-logo text-crema'
+      : 'border-l-transparent text-muted hover:border-l-line hover:text-crema'
   ].join(' ')
 }
 
@@ -440,7 +450,7 @@ export default function App() {
 
     const nombre =
       appActiva === null ? t(`videos.v${videoActivo}`) : t(`apps.${SLUGS_APPS.en[appActiva]}`)
-    const title = `${nombre} \u2014 ${t('hero.title')}`
+    const title = `${nombre} | ${t('hero.title')}`
     const description = t('meta.description')
     const url = `https://ap3c.app${camino}`
 
@@ -481,7 +491,7 @@ export default function App() {
                   type="button"
                   onClick={() => (entrada.sub === null ? salirDeApps() : elegirApp(entrada.sub))}
                   aria-current={activo ? 'true' : undefined}
-                  className={claseBoton(activo, false)}
+                  className={claseBoton(activo, false, i === APPS_MENU.length - 1)}
                 >
                   <span className={i === 0 ? undefined : 'min-w-0 hyphens-auto break-words'}>
                     {entrada.sub === null ? `<< ${t(entrada.clave)}` : t(entrada.clave)}
@@ -495,7 +505,7 @@ export default function App() {
                 type="button"
                 onClick={() => elegirVideo(i)}
                 aria-current={i === videoActivo ? 'true' : undefined}
-                className={claseBoton(i === videoActivo)}
+                className={claseBoton(i === videoActivo, true, i === PORTADAS.en.length - 1)}
               >
                 {/* Solo el primer punto parte la palabra: es la unica que no cabe entera */}
                 <span
@@ -695,7 +705,9 @@ export default function App() {
 
       <img
         ref={logoCabecera}
-        style={esEscritorio && !pantallaCompleta ? { left: borde.izq } : undefined}
+        style={
+          esEscritorio && !pantallaCompleta ? { left: borde.izq + SANGRIA_CABECERA } : undefined
+        }
         src="/logo-app-place.webp"
         alt="App Place Catalog"
         width={256}
@@ -708,7 +720,9 @@ export default function App() {
 
       <p
         ref={sloganCabecera}
-        style={esEscritorio && !pantallaCompleta ? { left: borde.izq } : undefined}
+        style={
+          esEscritorio && !pantallaCompleta ? { left: borde.izq + SANGRIA_CABECERA } : undefined
+        }
         className={[
           'absolute left-[70px] top-[11px] z-10 whitespace-pre-line text-center font-mono text-[0.825rem] uppercase leading-relaxed tracking-[0.2em] text-crema',
           'sm:left-0 sm:top-[134px] sm:text-[0.75rem]',
@@ -771,13 +785,23 @@ export default function App() {
           esEscritorio && !pantallaCompleta
             ? { left: borde.der + SEPARACION, maxWidth: borde.ancho }
             : undefined
-        } className="absolute bottom-1 left-2 z-20 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:justify-start sm:text-left sm:text-xs">
-        <span className="flex flex-none items-center gap-1.5 whitespace-nowrap">
-          © {new Date().getFullYear()}
-          <img src="/logo-ap3c.webp" alt="ap3c.app" className="h-3.5 w-auto sm:h-3" />
+        }
+        className="absolute bottom-1 left-2 z-20 flex flex-col items-start gap-y-0.5 font-mono text-[0.7rem] tracking-[0.1em] text-muted/70 sm:bottom-2 sm:text-left sm:text-xs"
+      >
+        <span className="flex items-center gap-1.5 whitespace-nowrap">
+          By
+          <a
+            href="https://iamjosepunto.github.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-crema/80 transition-colors hover:text-crema"
+          >
+            IamJosePunto.GitHub.io
+          </a>
         </span>
-        <span className="w-full whitespace-nowrap text-[0.6rem] sm:w-auto sm:whitespace-normal sm:text-xs">
-          {t('footer.rights')}
+        <span className="flex items-center whitespace-nowrap">
+          {`©${new Date().getFullYear()}`}
+          <span className="ml-1.5 text-[0.5rem] sm:text-xs">{t('footer.rights')}</span>
         </span>
       </footer>
 
