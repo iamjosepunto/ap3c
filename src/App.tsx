@@ -78,6 +78,21 @@ const OG_LOCALES: Record<string, string> = {
 const RUTA_INICIAL = leerRuta(window.location.pathname)
 if (RUTA_INICIAL) void i18next.changeLanguage(RUTA_INICIAL.idioma)
 
+// La presentacion solo tiene sentido al entrar por la raiz: si la direccion ya
+// apunta a un tutorial, quien llega viene a verlo y estorbaria. Y una sola vez
+// por sesion del navegador, no en cada recarga
+const CLAVE_INTRO = 'ap3c.intro'
+
+function tocaPresentacion() {
+  if (RUTA_INICIAL !== null) return false
+  try {
+    return window.sessionStorage.getItem(CLAVE_INTRO) === null
+  } catch {
+    // Navegacion privada con el almacen bloqueado: mejor ensenarla que fallar
+    return true
+  }
+}
+
 // APPS nunca se queda vacio: si no viene app en la direccion, se abre la primera
 const SUB_INICIAL =
   RUTA_INICIAL === null ? null : RUTA_INICIAL.indice === APPS ? (RUTA_INICIAL.sub ?? 0) : null
@@ -118,7 +133,9 @@ export default function App() {
   const language = i18n.resolvedLanguage ?? 'en'
   const video = useRef<HTMLVideoElement>(null)
   const [animacionLista, setAnimacionLista] = useState(false)
-  const [intro, setIntro] = useState<'dentro' | 'saliendo' | 'fuera'>('dentro')
+  const [intro, setIntro] = useState<'dentro' | 'saliendo' | 'fuera'>(() =>
+    tocaPresentacion() ? 'dentro' : 'fuera'
+  )
   const [posicionPanel, setPosicionPanel] = useState<number | null>(null)
   const [panelVisible, setPanelVisible] = useState(false)
   const [videoActivo, setVideoActivo] = useState(RUTA_INICIAL?.indice ?? 0)
@@ -147,15 +164,40 @@ export default function App() {
   const [tiempo, setTiempo] = useState(0)
   const [duracion, setDuracion] = useState(0)
 
-  // La presentacion entra, se mantiene y el logo viaja a la cabecera
+  // Queda marcada como vista al arrancar, para que recargar a media presentacion
+  // no la repita
   useEffect(() => {
-    const aSalir = setTimeout(() => setIntro('saliendo'), 6000)
-    const aFuera = setTimeout(() => setIntro('fuera'), 7100)
-    return () => {
-      clearTimeout(aSalir)
-      clearTimeout(aFuera)
+    try {
+      window.sessionStorage.setItem(CLAVE_INTRO, '1')
+    } catch {
+      // Sin almacen no se puede recordar; no es motivo para romper nada
     }
   }, [])
+
+  // La presentacion se mantiene 8 s y despues el logo viaja a la cabecera. El
+  // eslogan entra a los 4,6 s, asi que queda 3,4 s en pantalla para leerlo.
+  // Cada fase lleva su propio temporizador: si el visitante se la salta, lo que
+  // quedaba pendiente se cancela y no puede devolverla a escena
+  useEffect(() => {
+    if (intro !== 'dentro') return
+    const aSalir = setTimeout(() => setIntro('saliendo'), 8000)
+    return () => clearTimeout(aSalir)
+  }, [intro])
+
+  useEffect(() => {
+    if (intro !== 'saliendo') return
+    const aFuera = setTimeout(() => setIntro('fuera'), 1100)
+    return () => clearTimeout(aFuera)
+  }, [intro])
+
+  // Cualquier gesto la corta en seco: clic, tecla, rueda o toque
+  useEffect(() => {
+    if (intro === 'fuera') return
+    const saltar = () => setIntro('fuera')
+    const gestos = ['pointerdown', 'keydown', 'wheel', 'touchstart'] as const
+    gestos.forEach((g) => window.addEventListener(g, saltar, { passive: true }))
+    return () => gestos.forEach((g) => window.removeEventListener(g, saltar))
+  }, [intro])
 
   // El destino se mide en pantalla, asi encaja con la cabecera en cualquier tamano
   useEffect(() => {
