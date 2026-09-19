@@ -49,8 +49,10 @@ const GRABADOS: Record<number, Record<SupportedLanguage, string>> = {
     en: '/Tutorial_1_Requisitos_EN_reducido.mp4',
     es: '/Tutorial_1_Requisitos_ES_reducido.mp4'
   },
-  // El 2, Empezar, sigue con el video provisional, que no tiene version por idioma
-  2: { en: '/Prueba.mp4', es: '/Prueba.mp4' }
+  2: {
+    en: '/Tutorial_2_Empezar_EN_reducido.mp4',
+    es: '/Tutorial_2_Empezar_ES_reducido.mp4'
+  }
 }
 
 // El video depende del idioma y del punto activo; dentro de APPS siempre es el
