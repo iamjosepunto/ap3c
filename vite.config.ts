@@ -63,6 +63,9 @@ function paginaDe(plantilla: string, idioma: Idioma, indice: number, sub: number
   html = ponerMeta(html, 'property', 'og:url', url)
   html = ponerMeta(html, 'property', 'og:locale', OG_LOCALES[idioma])
   html = ponerMeta(html, 'property', 'og:locale:alternate', OG_LOCALES[alterno])
+  // Imagen social propia de cada idioma: el eslogan que lleva dentro cambia
+  html = ponerMeta(html, 'property', 'og:image', `${DOMINIO}/og-${idioma}.png`)
+  html = ponerMeta(html, 'property', 'og:image:alt', titulo)
   html = html.replace(/<link\s+rel="canonical"[\s\S]*?\/?>/i, `<link rel="canonical" href="${url}" />`)
 
   // hreflang: le dice al buscador que estas dos paginas son la misma en dos idiomas
