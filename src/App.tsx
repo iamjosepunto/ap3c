@@ -52,6 +52,11 @@ const GRABADOS: Record<number, Record<SupportedLanguage, string>> = {
   2: {
     en: '/Tutorial_2_Empezar_EN_reducido.mp4',
     es: '/Tutorial_2_Empezar_ES_reducido.mp4'
+  },
+  // El 3 es APPs, que solo es un enlace al submenu y no tiene tutorial
+  4: {
+    en: '/Tutorial_4_Cambiar_idioma_EN_reducido.mp4',
+    es: '/Tutorial_4_Cambiar_idioma_ES_reducido.mp4'
   }
 }
 
