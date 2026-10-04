@@ -61,6 +61,10 @@ const GRABADOS: Record<number, Record<SupportedLanguage, string>> = {
   5: {
     en: '/Tutorial_5_Subir_una_imagen_EN_reducido.mp4',
     es: '/Tutorial_5_Subir_una_imagen_ES_reducido.mp4'
+  },
+  11: {
+    en: '/Tutorial_11_Contacto_EN_reducido.mp4',
+    es: '/Tutorial_11_Contacto_ES_reducido.mp4'
   }
 }
 
