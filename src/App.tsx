@@ -80,11 +80,20 @@ const GRABADOS: Record<number, Record<SupportedLanguage, string>> = {
   }
 }
 
-// El video depende del idioma y del punto activo; dentro de APPS siempre es el
-// de construccion, porque las dos apps aun no tienen tutorial propio
+// Tutoriales ya grabados de las apps. La clave es el numero de tutorial: el del
+// punto APPS mas la posicion de la app dentro de APPS, asi 3.1 es Love & Friends
+// y 3.2 es Languages. Las que faltan usan el video de construccion
+const GRABADOS_APPS: Record<string, Record<SupportedLanguage, string>> = {
+  '3.2': {
+    en: '/Tutorial_3.2_Languages_EN_reducido.mp4',
+    es: '/Tutorial_3.2_Languages_ES_reducido.mp4'
+  }
+}
+
+// El video depende del idioma y del punto activo; dentro de APPS se busca por
+// numero de tutorial y la app que aun no tiene el suyo usa el de construccion
 function videoDe(idioma: string, indice: number, sub: number | null) {
-  if (sub !== null) return EN_OBRAS
-  const grabado = GRABADOS[indice + 1]
+  const grabado = sub === null ? GRABADOS[indice + 1] : GRABADOS_APPS[`${indice + 1}.${sub + 1}`]
   if (!grabado) return EN_OBRAS
   return grabado[esIdiomaValido(idioma) ? idioma : 'en']
 }
