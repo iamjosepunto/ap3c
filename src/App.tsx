@@ -366,12 +366,18 @@ export default function App() {
   }
 
   // Si el navegador no admite pantalla completa sobre el contenedor (Safari en iPhone),
-  // se expande por CSS y el resultado visual es el mismo
+  // se expande por CSS y el resultado visual es el mismo. En movil se expande siempre
+  // por CSS: la pantalla completa real hace que el navegador ponga encima un aviso
+  // que la pagina no puede quitar y que tapa la parte de abajo del video
   const alternarPantallaCompleta = () => {
     const zona = zonaVideo.current
     if (!zona) return
     if (document.fullscreenElement) {
       void document.exitFullscreen()
+      return
+    }
+    if (!esEscritorio) {
+      setPantallaCompleta((v) => !v)
       return
     }
     if (typeof zona.requestFullscreen === 'function') {
